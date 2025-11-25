@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect } from 'react';
 import { login } from '@/store/thunks';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import googleIcon from '@/assets/icons/google.svg';
 import logo from '@/assets/icons/logo.png';
 import { ChartBar, CheckCircle2, TrendingUp } from 'lucide-react';
 import { FeaturesList, Feature } from '@/components/composite/login/FeaturesList';
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -36,19 +37,30 @@ const LoginPage = () => {
 
   const handleSuccess = async (data: any) => {
     try {
-      const result = await dispatch(login(data))
-      // Only navigate if login was successful
-      if (result) {
-        router.replace('/home');
-      }
+      await dispatch(login(data)).unwrap();
     } catch (err: any) {
       // Handle login failure
+      // When using rejectWithValue, the error is in err.payload
+      // Extract message from API response: err.payload.response.data.message
+      const errorMessage = err?.payload?.response?.data?.message || 
+                          err?.response?.data?.message || 
+                          err?.message || 
+                          'Failed to sign in. Please try again.';
+      toast.error(errorMessage);
     }
   }
 
+  useEffect(() => {
+    if (user && !loading) {
+      router.replace('/home');
+    }
+  }, [user]);
+
   const handleLogin = useGoogleLogin({
     onSuccess: codeResponse => handleSuccess(codeResponse),
-    onError: () => console.log('Login Failed'),
+    onError: () => {
+      toast.error('Google sign-in failed. Please try again.');
+    },
     flow: 'auth-code',
   });
 
@@ -94,7 +106,7 @@ const LoginPage = () => {
           <Button 
             onClick={handleLogin}
             variant="outline"
-            className="w-full bg-white border border-gray-200 hover:border-gray-300 rounded-md py-6 px-6 hover:shadow-md group mb-8"
+            className="w-full bg-white border border-gray-200 hover:border-purple-300 rounded-md py-6 px-6 hover:shadow-md group mb-8 cursor-pointer hover:bg-purple-50 hover:text-purple-900 transition-all duration-300"
           >
             {/* Google Logo */}
             <Image 
@@ -104,7 +116,7 @@ const LoginPage = () => {
               height={20}
               className="shrink-0"
             />
-            <span className="text-sm font-light text-gray-700 group-hover:text-gray-900 transition-colors">
+            <span className="text-sm font-light text-gray-700 group-hover:text-purple-900 transition-colors">
               Continue with Google
             </span>
           </Button>

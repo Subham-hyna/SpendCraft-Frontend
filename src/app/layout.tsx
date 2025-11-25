@@ -4,6 +4,8 @@ import "./globals.css";
 import { ReduxProviders } from "@/store/Providers";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Config from "@/config";
+import AuthLoader from "@/components/composite/AuthLoader";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +34,12 @@ export default function RootLayout({
       >
         <GoogleOAuthProvider clientId={Config.GOOGLE_CLIENT_ID as string}>
           <ReduxProviders>
-            {children}
+            <AuthLoader>
+              {children}
+            </AuthLoader>
           </ReduxProviders>
         </GoogleOAuthProvider>
+        <Toaster />
       </body>
     </html>
   );

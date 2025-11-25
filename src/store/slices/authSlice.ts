@@ -1,20 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, logout } from "@/store/thunks";
-
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-}
-
+import { fetchUser, login, logout } from "@/store/thunks";
+import { User } from "@/types/apiResponse";
 interface AuthState {
   user: User | null;
   loading: boolean;
+  is_authenticated: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   loading: false,
+  is_authenticated: false,
 };
 
 const authSlice = createSlice({
@@ -26,15 +22,33 @@ const authSlice = createSlice({
         // Login
         .addCase(login.pending, (state) => {
           state.loading = true;
+          state.is_authenticated = false;
         })
         .addCase(login.fulfilled, (state, action) => {
           state.loading = false;
-          state.user = action.payload;
+          state.user = action.payload.user;
+          state.is_authenticated = true;
         })
         .addCase(login.rejected, (state) => {
           state.loading = false;
+          state.is_authenticated = false;
         })
-  
+
+        // Fetch User
+        .addCase(fetchUser.pending, (state) => {
+          state.loading = true;
+          state.is_authenticated = false;
+        })
+        .addCase(fetchUser.fulfilled, (state, action) => {
+          state.loading = false;
+          state.user = action.payload;
+          state.is_authenticated = true;
+        })
+        .addCase(fetchUser.rejected, (state) => {
+          state.loading = false;
+          state.is_authenticated = false;
+        })
+        
         // Logout
         .addCase(logout.pending, (state) => {
           state.loading = true;
