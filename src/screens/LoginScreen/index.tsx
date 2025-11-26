@@ -74,7 +74,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
+    <div className="h-full bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
       {/* Login Card */}
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/20 p-8 sm:p-12 transition-colors duration-300">
