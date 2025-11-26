@@ -14,7 +14,7 @@ export default function AuthLoader({ children }: { children: React.ReactNode }) 
     if (pathname !== '/login') {
       dispatch(fetchUser());
     }
-  }, [dispatch, pathname]);
+  }, []);
 
   useEffect(() => {
     if (!loading && !is_authenticated && pathname !== '/login') {
