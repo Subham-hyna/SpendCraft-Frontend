@@ -21,10 +21,11 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async () => {
 export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
   try {
     const data = await authService.logout();
-    removeCookie('access_token'); 
-    clearTokens();
     return data;
   } catch (error: any) {
     return rejectWithValue(error);
+  } finally {
+    clearTokens();
+    removeCookie('access_token'); 
   }
 });
