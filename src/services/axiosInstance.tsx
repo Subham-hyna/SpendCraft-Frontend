@@ -140,8 +140,6 @@ apiInstance.interceptors.response.use(
           apiInstance.defaults.headers.Authorization = 'Bearer ' + newAccessToken;
         }
 
-        setCookie('access_token', res.data.access_token);
-
         // Cookies are automatically set by the server response
         processQueue(null);
 

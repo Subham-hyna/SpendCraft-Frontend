@@ -1,5 +1,5 @@
 import { authService } from '@/services/authService';
-import { removeCookie } from '@/services/axiosInstance';
+import { clearTokens, removeCookie } from '@/services/axiosInstance';
 import { userService } from '@/services/userService';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 // 🔹 Async Thunks (Redux way to handle async calls)
@@ -22,6 +22,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
   try {
     const data = await authService.logout();
     removeCookie('access_token'); 
+    clearTokens();
     return data;
   } catch (error: any) {
     return rejectWithValue(error);
