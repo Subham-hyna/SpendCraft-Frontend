@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export default function Home() {
   const router = useRouter();
-  const { is_authenticated, loading } = useSelector((state:any) => state.auth);
+  const { is_authenticated, user_fetch_loading: loading } = useSelector((state:any) => state.auth);
 
   useEffect(() => {
     // Wait for auth check to complete before redirecting

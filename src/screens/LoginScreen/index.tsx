@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect } from 'react';
-import { login } from '@/store/thunks';
+import { fetchUser, login } from '@/store/thunks';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store';
@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 const LoginPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { user, login_loading: loading } = useAppSelector((state) => state.auth);
+  const { user, login_loading: loading } = useAppSelector((state: any) => state.auth);
 
   const features: Feature[] = [
     {
@@ -38,6 +38,7 @@ const LoginPage = () => {
   const handleSuccess = async (data: any) => {
     try {
       await dispatch(login(data)).unwrap();
+      await dispatch(fetchUser()).unwrap();
     } catch (err: any) {
       // Handle login failure
       // When using rejectWithValue, the error is in err.payload
