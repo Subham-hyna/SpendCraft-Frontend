@@ -26,16 +26,12 @@ const LayoutContent = ({children, isHeaderVisible = true, isBottomNavVisible = t
     return (
         <div className='flex h-dvh w-full mx-auto overflow-hidden'>
             <Sidebar />
-            <div className='flex flex-col flex-1 w-full h-full overflow-hidden'>
+            <div className='flex flex-col flex-1 w-full overflow-hidden'>
                 {isHeaderVisible && <HeaderNav pageHeading={pageHeading} showNotificationBell={showNotificationBell} showProfile={showProfile} />}
-                <main className='flex-1 min-h-0 overflow-y-auto bg-gray-50 dark:bg-gray-900'>
+                <main className='flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900'>
                     {children}
                 </main> 
-                {isBottomNavVisible && (
-                    <div className='shrink-0'>
-                        <BottomNav />
-                    </div>
-                )}
+                {isBottomNavVisible && <BottomNav />}
             </div>
         </div>
     )
