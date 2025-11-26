@@ -23,27 +23,14 @@ const apiInstance: AxiosInstance = axios.create({
 
 // Request interceptor to validate API_BASE_URL and prevent caching
 apiInstance.interceptors.request.use(
-  (config) => {
-    if (!API_BASE_URL) {
-      console.error('API_BASE_URL is not configured. Request will fail:', config.url);
-      return Promise.reject(new Error('API_BASE_URL is not configured. Please set NEXT_PUBLIC_API_BASE_URL in your environment variables.'));
+  (config: InternalAxiosRequestConfig) => {
+    const token = getToken();
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Prevent browser caching by adding cache-control headers and removing conditional headers
-    config.headers = config.headers || {};
-    config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
-    config.headers['Pragma'] = 'no-cache';
-    config.headers['Expires'] = '0';
-    
-    // Remove conditional request headers to prevent 304 responses
-    delete config.headers['If-None-Match'];
-    delete config.headers['If-Modified-Since'];
-    
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error: any) => Promise.reject(error)
 );
 
 let isRefreshing = false;
@@ -63,24 +50,47 @@ const processQueue = (error: Error | null) => {
   });
   failedQueue = [];
 };
-
-// Helper: clear cookies
-export const clearCookies = () => {
-  if (typeof document !== 'undefined') {
-    // Clear all cookies by setting them to expire in the past
-    document.cookie.split(';').forEach((cookie) => {
-      const eqPos = cookie.indexOf('=');
-      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
-    });
-  }
+export const removeCookie = (name: string) => {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/`;
 };
 
 export const setCookie = (name: string, value: string) => {
   if (typeof document !== 'undefined') {
     document.cookie = `${name}=${value};path=/`;
     document.cookie = `${name}=${value};path=/;domain=${window.location.hostname}`;
+  }
+};
+
+export const setToken = (name: string, value: string) => {
+  if (typeof window !== 'undefined' && localStorage) {
+    localStorage.setItem(name, value);
+  }
+};
+
+// Helper: get token from localStorage
+const getToken = (): string | null => {
+  if (typeof window !== 'undefined' && localStorage) {
+    return localStorage.getItem('access_token');
+  }
+  return null;
+};
+
+// Helper: get refresh token from localStorage
+const getRefreshToken = (): string | null => {
+  if (typeof window !== 'undefined' && localStorage) {
+    return localStorage.getItem('refresh_token');
+  }
+  return null;
+};
+
+// Helper: clear tokens from localStorage
+export const clearTokens = () => {
+  if (typeof window !== 'undefined' && localStorage) {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_id');
+    // Navigate to login page
+    window.location.href = '/login';
   }
 };
 
@@ -115,16 +125,22 @@ apiInstance.interceptors.response.use(
 
       try {
         // Refresh endpoint will receive cookies automatically via withCredentials
+        const refreshToken = getRefreshToken();
+
         const res = await axios.post(
-          `${API_BASE_URL}/auth/refresh`,
-          {},
-          {
-            withCredentials: true,
+          `${API_BASE_URL}/auth/refresh`,{
+            refresh_token: refreshToken,
           }
         );
 
+        const newAccessToken = res.data.access_token;
+        setToken('access_token', newAccessToken);
+
+        if (apiInstance.defaults.headers) {
+          apiInstance.defaults.headers.Authorization = 'Bearer ' + newAccessToken;
+        }
+
         setCookie('access_token', res.data.access_token);
-        setCookie('refresh_token', res.data.refresh_token);
 
         // Cookies are automatically set by the server response
         processQueue(null);
@@ -133,7 +149,8 @@ apiInstance.interceptors.response.use(
       } catch (err) {
         processQueue(err instanceof Error ? err : new Error(String(err)));
         // Clear cookies and redirect to login
-        clearCookies();
+        removeCookie('access_token');
+        clearTokens();
         window.location.href = '/login';
         console.warn('Session expired. Redirect to login.');
         return Promise.reject(err);
