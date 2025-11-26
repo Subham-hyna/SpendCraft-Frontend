@@ -24,17 +24,17 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
 
   return (
     <header className="bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-800">
-      <div className="flex items-center justify-between px-2 py-3">
+      <div className="flex items-center justify-between px-4 py-3">
         <button
           onClick={openSidebar}
-          className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           aria-label="Toggle sidebar"
         >
           <Menu size={24} strokeWidth={1.5} className="w-6 h-6 text-gray-700 dark:text-gray-200" />
         </button>
 
         {/* Middle Section - Page Heading or Profile */}
-        <div className={`flex items-center gap-3 justify-start flex-1 ml-2`}>
+        <div className={`flex items-center gap-3 ${pageHeading ? 'justify-center' : 'justify-start'} flex-1 ml-4`}>
           {pageHeading ? (
             <h1 className="text-lg font-light text-gray-900 dark:text-white">
               {pageHeading}
@@ -72,7 +72,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
         {/* Notification Bell */}
         {showNotificationBell && (
           <button
-            className="relative p-2 rounded-lg transition-colors"
+            className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="Notifications"
           >
             <Bell size={24} strokeWidth={1.5} className="w-6 h-6 text-gray-700 dark:text-gray-200" />
