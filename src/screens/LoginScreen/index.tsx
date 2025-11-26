@@ -5,6 +5,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { Button } from '@/components/atomic/button';
+import { Spinner } from '@/components/atomic/spinner';
 import Image from 'next/image';
 import googleIcon from '@/assets/icons/google.svg';
 import logo from '@/assets/icons/logo.png';
@@ -65,14 +66,6 @@ const LoginPage = () => {
     flow: 'auth-code',
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen w-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-        <div className="text-gray-900 dark:text-gray-100">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-dvh bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
       {/* Login Card */}
@@ -107,16 +100,20 @@ const LoginPage = () => {
           <Button 
             onClick={handleLogin}
             variant="outline"
-            className="w-full bg-slate-50 dark:bg-slate-600 border border-gray-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-400 rounded-md py-6 px-6 hover:shadow-md group mb-8 cursor-pointer hover:bg-purple-50 hover:text-purple-600 dark:hover:text-purple-200 transition-all duration-300"
+            disabled={loading}
+            className="w-full bg-slate-50 dark:bg-slate-600 border border-gray-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-400 rounded-md py-6 px-6 hover:shadow-md group mb-8 cursor-pointer hover:bg-purple-50 hover:text-purple-600 dark:hover:text-purple-200 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {/* Google Logo */}
-            <Image 
-              src={googleIcon} 
-              alt="Google" 
-              width={20} 
-              height={20}
-              className="shrink-0"
-            />
+            {loading ? (
+              <Spinner className="shrink-0" />
+            ) : (
+              <Image 
+                src={googleIcon} 
+                alt="Google" 
+                width={20} 
+                height={20}
+                className="shrink-0"
+              />
+            )}
             <span className="text-sm font-light text-gray-700 dark:text-gray-100 group-hover:text-purple-900 dark:group-hover:text-purple-200 transition-colors">
               Continue with Google
             </span>

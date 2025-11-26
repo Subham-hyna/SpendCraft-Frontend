@@ -3,6 +3,7 @@ export interface User {
     email: string;
     name: string;
     photo_uri: string;
+    is_new_user: boolean;
 }
 
 export interface GoogleLoginResponse {
