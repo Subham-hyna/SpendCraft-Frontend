@@ -67,17 +67,17 @@ const LoginPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen w-screen">
-        <div>Loading...</div>
+      <div className="flex items-center justify-center h-screen w-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+        <div className="text-gray-900 dark:text-gray-100">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
       {/* Login Card */}
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 sm:p-12">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/20 p-8 sm:p-12 transition-colors duration-300">
           {/* Logo and App Name */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-8">
@@ -89,16 +89,16 @@ const LoginPage = () => {
                 className="object-contain"
               />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-light text-gray-900 mb-3 tracking-tight">SpendCraft</h1>
-            <p className="text-sm text-gray-400 font-light">
+            <h1 className="text-4xl sm:text-5xl font-light text-gray-900 dark:text-gray-100 mb-3 tracking-tight">SpendCraft</h1>
+            <p className="text-sm text-gray-400 dark:text-gray-400 font-light">
               Smart expense tracking
             </p>
           </div>
 
           {/* Welcome Text */}
           <div className="text-center mb-6">
-            <h2 className="text-2xl sm:text-3xl font-light text-gray-900 mb-3">Welcome</h2>
-            <p className="text-sm text-gray-500 font-light">
+            <h2 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-3">Welcome</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-light">
               Sign in to manage your finances
             </p>
           </div>
@@ -107,7 +107,7 @@ const LoginPage = () => {
           <Button 
             onClick={handleLogin}
             variant="outline"
-            className="w-full bg-white border border-gray-200 hover:border-purple-300 rounded-md py-6 px-6 hover:shadow-md group mb-8 cursor-pointer hover:bg-purple-50 hover:text-purple-900 transition-all duration-300"
+            className="w-full bg-slate-50 dark:bg-slate-600 border border-gray-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-400 rounded-md py-6 px-6 hover:shadow-md group mb-8 cursor-pointer hover:bg-purple-50 hover:text-purple-600 dark:hover:text-purple-200 transition-all duration-300"
           >
             {/* Google Logo */}
             <Image 
@@ -117,13 +117,13 @@ const LoginPage = () => {
               height={20}
               className="shrink-0"
             />
-            <span className="text-sm font-light text-gray-700 group-hover:text-purple-900 transition-colors">
+            <span className="text-sm font-light text-gray-700 dark:text-gray-100 group-hover:text-purple-900 dark:group-hover:text-purple-200 transition-colors">
               Continue with Google
             </span>
           </Button>
 
           {/* Features */}
-          <FeaturesList features={features} />
+          <FeaturesList features={features} className="transition-colors duration-300" />
           
         </div>
       </div>

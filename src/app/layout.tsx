@@ -4,8 +4,9 @@ import "./globals.css";
 import { ReduxProviders } from "@/store/Providers";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Config from "@/config";
-import AuthLoader from "@/components/composite/AuthLoader";
+import AuthLoader from "@/providers/AuthLoader";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,11 +37,14 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <GoogleOAuthProvider clientId={Config.GOOGLE_CLIENT_ID as string}>
           <ReduxProviders>
             <AuthLoader>
-              {children}
+              <ThemeProvider>
+                {children}
+              </ThemeProvider>
             </AuthLoader>
           </ReduxProviders>
         </GoogleOAuthProvider>
