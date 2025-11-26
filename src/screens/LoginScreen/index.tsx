@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 const LoginPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { user, loading } = useAppSelector((state) => state.auth);
+  const { user, login_loading: loading } = useAppSelector((state) => state.auth);
 
   const features: Feature[] = [
     {

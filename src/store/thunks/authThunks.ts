@@ -18,8 +18,12 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async () => {
   return data;
 });
 
-export const logout = createAsyncThunk('auth/logout', async () => {
-  const data = await authService.logout();
-  clearCookies(); 
-  return data;
+export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
+  try {
+    const data = await authService.logout();
+    clearCookies(); 
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error);
+  }
 });

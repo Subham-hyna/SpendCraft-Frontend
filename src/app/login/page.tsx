@@ -2,6 +2,9 @@ import React from 'react'
 import LoginScreen from '@/screens/LoginScreen'
 import { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Login | SpendCraft",
   description: "Login to your account",

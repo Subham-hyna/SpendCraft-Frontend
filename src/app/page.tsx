@@ -1,16 +1,22 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { user, loading } = useSelector((state:any) => state.auth);
+  const { is_authenticated, loading } = useSelector((state:any) => state.auth);
 
   useEffect(() => {
-    router.replace('/login');
-  }, []);
+    // Wait for auth check to complete before redirecting
+    if (!loading) {
+      if (is_authenticated) {
+        router.replace('/home');
+      } else {
+        router.replace('/login');
+      }
+    }
+  }, [is_authenticated, loading, router]);
 
   return (
     <>
