@@ -14,15 +14,15 @@ interface Header2Props {
 const Header2 = ({ title, description, onFilterClick, onMarkAllAsRead, unreadCount }: Header2Props) => {
     const { openSidebar } = useSidebar();
   return (
-    <div className="bg-gradient-to-b from-indigo-500 to-indigo-400 text-white px-4 sm:px-6 pt-8 pb-12">
+    <div className="bg-gradient-to-b from-indigo-500 to-indigo-400 text-white px-4 pt-8 pb-12">
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-4">
             <button onClick={openSidebar} className="text-white hover:bg-white/20 transition-colors p-2 rounded-lg">
               <Menu size={24} strokeWidth={1.5} />
             </button>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-light tracking-tight mb-2">{title}</h1>
-              <p className="text-indigo-100 text-sm sm:text-base font-light">
+              <h1 className="text-3xl font-light tracking-tight mb-2">{title}</h1>
+              <p className="text-indigo-100 text-sm font-light">
                 {description}
               </p>
             </div>

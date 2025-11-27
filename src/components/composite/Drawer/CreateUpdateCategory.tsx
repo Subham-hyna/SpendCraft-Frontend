@@ -124,7 +124,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
         </DrawerHeader>
         <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 overflow-hidden flex flex-col max-h-[85vh]">
           {/* Content */}
-          <div className="p-6 sm:p-8 space-y-8 overflow-y-auto flex-1">
+          <div className="p-6 space-y-8 overflow-y-auto flex-1">
             {/* Category Name */}
             <div>
               <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
@@ -145,12 +145,12 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
               <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                 Choose Icon *
               </Label>
-              <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 sm:gap-3">
+              <div className="grid grid-cols-5 gap-2">
                 {icons.map((icon) => (
                   <button
                     key={icon}
                     onClick={() => setSelectedIcon(icon)}
-                    className={`aspect-square rounded-xl flex items-center justify-center text-2xl sm:text-3xl transition-all ${
+                    className={`aspect-square rounded-xl flex items-center justify-center text-2xl transition-all ${
                       selectedIcon === icon
                         ? 'bg-purple-200 dark:bg-purple-600 scale-95'
                         : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
@@ -167,7 +167,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
               <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                 Choose Color *
               </Label>
-              <div className="grid grid-cols-5 sm:grid-cols-9 gap-2 sm:gap-3">
+              <div className="grid grid-cols-5 gap-2">
                 {colors.map((color) => (
                   <button
                     key={color}
@@ -244,7 +244,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
           </div>
 
           {/* Footer */}
-          <div className="px-6 sm:px-8 py-4 border-t border-gray-100 dark:border-gray-700">
+          <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
             <div className="flex gap-3 w-full">
               <DrawerClose 
                 className={cn(buttonVariants({ variant: "outline" }), "w-full flex-1")}

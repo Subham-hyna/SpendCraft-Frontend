@@ -57,7 +57,7 @@ const CategoryScreen = () => {
   return (
     <Layout isHeaderVisible={false}>
         <Header2 title="Categories" description="Manage your expense categories" />
-        <div className="px-4 sm:px-6 -mt-7 pb-24">
+        <div className="px-4 -mt-7 pb-24">
         {/* Add New Category Button */}
         <CreateUpdateCategory 
         className="w-full"

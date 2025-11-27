@@ -70,7 +70,7 @@ const LoginPage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
       {/* Login Card */}
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/20 p-8 sm:p-12 transition-colors duration-300">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/20 p-8 transition-colors duration-300">
           {/* Logo and App Name */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-8">
@@ -82,7 +82,7 @@ const LoginPage = () => {
                 className="object-contain"
               />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-light text-gray-900 dark:text-gray-100 mb-3 tracking-tight">SpendCraft</h1>
+            <h1 className="text-4xl font-light text-gray-900 dark:text-gray-100 mb-3 tracking-tight">SpendCraft</h1>
             <p className="text-sm text-gray-400 dark:text-gray-400 font-light">
               Smart expense tracking
             </p>
@@ -90,7 +90,7 @@ const LoginPage = () => {
 
           {/* Welcome Text */}
           <div className="text-center mb-6">
-            <h2 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-3">Welcome</h2>
+            <h2 className="text-2xl font-light text-gray-900 dark:text-gray-100 mb-3">Welcome</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 font-light">
               Sign in to manage your finances
             </p>
