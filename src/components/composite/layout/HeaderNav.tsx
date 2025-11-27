@@ -27,7 +27,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
       <div className="flex items-center justify-between px-2 py-3">
         <button
           onClick={openSidebar}
-          className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="p-1 rounded-lg transition-colors"
           aria-label="Toggle sidebar"
         >
           <Menu size={24} strokeWidth={1.5} className="w-6 h-6 text-gray-700 dark:text-gray-200" />

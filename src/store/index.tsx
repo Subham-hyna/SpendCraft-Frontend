@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { expenseSlice, authSlice } from '@/store/slices';
+import { expenseSlice, authSlice, categorySlice } from '@/store/slices';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 
@@ -8,6 +8,7 @@ export const makeStore = () =>
     reducer: {
       expenses: expenseSlice,
       auth: authSlice,
+      categories: categorySlice,
     }
   });
 

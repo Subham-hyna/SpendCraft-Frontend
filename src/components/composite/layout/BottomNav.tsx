@@ -36,7 +36,7 @@ const BottomNavigation = () => {
                 <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-400 dark:from-indigo-600 dark:to-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg dark:shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all">
                   <IconComponent size={28} strokeWidth={2} />
                 </div>
-                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs font-light text-gray-400 dark:text-gray-300 whitespace-nowrap">
+                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs font-light text-gray-500 dark:text-gray-300 whitespace-nowrap">
                   {item.label}
                 </span>
               </button>

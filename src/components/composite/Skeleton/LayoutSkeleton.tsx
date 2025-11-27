@@ -3,7 +3,7 @@ import React from 'react'
 
 const LayoutSkeleton = () => {
   return (
-    <div className='flex h-dvh w-full mx-auto overflow-hidden'>
+    <div className='flex min-h-screen w-full mx-auto overflow-hidden'>
       {/* Sidebar Skeleton */}
       <div className='w-0 md:w-0 hidden'>
         {/* Sidebar is hidden on mobile, so no skeleton needed */}

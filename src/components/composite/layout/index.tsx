@@ -3,7 +3,7 @@ import React from 'react'
 import Sidebar from '@/components/composite/Sidebar'
 import HeaderNav from './HeaderNav'
 import BottomNav from './BottomNav'
-import LayoutSkeleton from './LayoutSkeleton'
+import LayoutSkeleton from '../Skeleton/LayoutSkeleton'
 import { SidebarProvider } from '@/hooks/useSidebar'
 import { useAppSelector } from '@/store'
 

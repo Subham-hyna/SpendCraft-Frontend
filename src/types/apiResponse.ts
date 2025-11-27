@@ -15,3 +15,19 @@ export interface GoogleLoginResponse {
 export interface LogoutResponse {
     message: string;
 }
+
+export interface Category {
+    _id: string;
+    name: string;
+    color: string;
+    icon: string;
+    subcategories: Subcategory[];
+}
+
+export interface CreateUpdateCategoryResponse {
+    category: Category;
+}
+export interface Subcategory {
+    _id: string;
+    name: string;
+}

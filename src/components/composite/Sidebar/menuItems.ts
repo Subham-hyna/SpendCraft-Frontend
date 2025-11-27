@@ -6,7 +6,7 @@ export const menuItems = [
     { id: 'budgets', icon: DollarSign, label: 'Budgets', badge: null, path: '/budget' },
     { id: 'notifications', icon: Bell, label: 'Notifications', badge: 3, path: '/notifications' },
     { id: 'alerts', icon: AlertTriangle, label: 'Alerts & Reminders', badge: null, path: '/alerts' },
-    { id: 'categories', icon: Tag, label: 'Categories', badge: null, path: '/categories' },
+    { id: 'categories', icon: Tag, label: 'Categories', badge: null, path: '/category' },
     { id: 'export', icon: Download, label: 'Export Data', badge: null, path: '/export' },
     { id: 'settings', icon: Settings, label: 'Settings', badge: null, path: '/setting' },
   ]
