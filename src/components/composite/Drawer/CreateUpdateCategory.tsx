@@ -122,7 +122,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
         <DrawerHeader className="sr-only">
           <DrawerTitle>{isEditMode ? 'Edit Category' : 'Create Category'}</DrawerTitle>
         </DrawerHeader>
-        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-sm dark:shadow-gray-900/20 overflow-hidden flex flex-col max-h-[85vh]">
+        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 overflow-hidden flex flex-col max-h-[85vh]">
           {/* Content */}
           <div className="p-6 sm:p-8 space-y-8 overflow-y-auto flex-1">
             {/* Category Name */}
@@ -132,6 +132,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
               </Label>
               <Input
                 type="text"
+                style={{ borderRadius: '8px' }}
                 placeholder="e.g., Food & Dining"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
@@ -192,6 +193,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
                   <div key={index} className="flex gap-2">
                     <Input
                       type="text"
+                      style={{ borderRadius: '8px' }}
                       placeholder={`Subcategory ${index + 1}`}
                       value={sub}
                       onChange={(e) => updateSubcategory(index, e.target.value)}
@@ -209,7 +211,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
                 ))}
                 <button
                   onClick={addSubcategory}
-                  className="w-full py-3 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 transition-all flex items-center justify-center gap-2 font-light"
+                  className="w-full py-3 border-2 border-dashed bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-700 rounded-xl text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 transition-all flex items-center justify-center gap-2 font-light"
                 >
                   <Plus size={18} strokeWidth={1.5} />
                   Add Subcategory
