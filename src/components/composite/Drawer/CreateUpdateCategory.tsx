@@ -133,10 +133,10 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
               <Input
                 type="text"
                 style={{ borderRadius: '8px' }}
-                placeholder="e.g., Food & Dining"
+                placeholder="e.g., Food"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
+                className="w-full px-4 py-5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-100 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
               />
             </div>
 
@@ -197,7 +197,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
                       placeholder={`Subcategory ${index + 1}`}
                       value={sub}
                       onChange={(e) => updateSubcategory(index, e.target.value)}
-                      className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
+                      className="flex-1 px-4 py-5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
                     />
                     {subcategories.length > 1 && (
                       <button
