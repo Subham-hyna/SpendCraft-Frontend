@@ -35,7 +35,7 @@ const CategoryCard = ({ title, subcategories, icon, bgColor, category, onEdit, o
           </button>
           <button 
             onClick={() => category && onDelete && onDelete(category)}
-            className="text-red-400 dark:text-red-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex-shrink-0"
+            className="text-red-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-600 transition-colors flex-shrink-0"
           >
             <Trash2 size={18} strokeWidth={1.5} />
           </button>
