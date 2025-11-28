@@ -5,7 +5,7 @@ export const menuItems = [
     { id: 'reports', icon: PieChart, label: 'Reports & Insights', badge: null, path: '/reports' },
     { id: 'budgets', icon: DollarSign, label: 'Budgets', badge: null, path: '/budget' },
     { id: 'notifications', icon: Bell, label: 'Notifications', badge: 3, path: '/notification' },
-    { id: 'alerts', icon: AlertTriangle, label: 'Alerts & Reminders', badge: null, path: '/alerts' },
+    { id: 'alerts', icon: AlertTriangle, label: 'Alerts & Reminders', badge: null, path: '/alert' },
     { id: 'categories', icon: Tag, label: 'Categories', badge: null, path: '/category' },
     { id: 'export', icon: Download, label: 'Export Data', badge: null, path: '/export' },
     { id: 'settings', icon: Settings, label: 'Settings', badge: null, path: '/setting' },

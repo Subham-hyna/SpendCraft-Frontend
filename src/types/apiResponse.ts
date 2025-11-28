@@ -47,3 +47,33 @@ export interface ProfileStatsResponse {
     total_categories: number;
     this_month_expenses: number;
 }
+export interface AlertThreshold {
+    percentage: number;
+    enabled: boolean;
+  }
+  
+  export interface BudgetAlert {
+    enabled: boolean;
+    thresholds: AlertThreshold[];
+  }
+  
+  export interface DailyReminder {
+    enabled: boolean;
+  }
+  
+  export interface WeeklyReport {
+    enabled: boolean;
+  }
+  
+  export interface LargeExpense {
+    enabled: boolean;
+    thresholdAmount: number;
+  }
+  
+  export interface Alert {
+    budget: BudgetAlert;
+    dailyReminder: DailyReminder;
+    weeklyReport: WeeklyReport;
+    largeExpense: LargeExpense;
+  }
+  

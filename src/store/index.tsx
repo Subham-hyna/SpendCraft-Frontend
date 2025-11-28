@@ -10,6 +10,7 @@ export const makeStore = () =>
       auth: slices.authSlice,
       categories: slices.categorySlice,
       settings: slices.settingSlice,
+      alerts: slices.alertSlice,  
     }
   });
 
