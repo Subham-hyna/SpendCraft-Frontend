@@ -1,11 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUser, login, logout } from "@/store/thunks";
-import { User } from "@/types/apiResponse";
+import { fetchUser, login, logout, profileStats, updateUser, uploadImage } from "@/store/thunks";
+import { ProfileStatsResponse, User } from "@/types/apiResponse";
 interface AuthState {
   user: User | null;
   login_loading: boolean;
   fetch_user_loading: boolean;
   logout_loading: boolean;
+  upload_image_loading: boolean;
+  profile_stats_loading: boolean;
+  update_user_loading: boolean;
+  profile_stats: ProfileStatsResponse | null;
   is_authenticated: boolean;
 }
 
@@ -13,8 +17,12 @@ const initialState: AuthState = {
   user: null,
   login_loading: false,
   fetch_user_loading: true,
+  profile_stats: null,
   is_authenticated: false,
   logout_loading: false,
+  profile_stats_loading: false,
+  upload_image_loading: false,
+  update_user_loading: false,
 };
 
 const authSlice = createSlice({
@@ -63,7 +71,43 @@ const authSlice = createSlice({
         })
         .addCase(logout.rejected, (state) => {
           state.logout_loading = false;
-        });
+        })
+
+        // Upload Image
+        .addCase(uploadImage.pending, (state) => {
+          state.upload_image_loading = true;
+        })
+        .addCase(uploadImage.fulfilled, (state, action) => {
+          state.upload_image_loading = false;
+          state.user = action.payload;
+        })
+        .addCase(uploadImage.rejected, (state) => {
+          state.upload_image_loading = false;
+        })
+
+        // Profile Stats
+        .addCase(profileStats.pending, (state) => {
+          state.profile_stats_loading = true;
+        })
+        .addCase(profileStats.fulfilled, (state, action) => {
+          state.profile_stats_loading = false;
+          state.profile_stats = action.payload;
+        })
+        .addCase(profileStats.rejected, (state) => {
+          state.profile_stats_loading = false;
+        })
+
+        // Update User
+        .addCase(updateUser.pending, (state) => {
+          state.update_user_loading = true;
+        })
+        .addCase(updateUser.fulfilled, (state, action) => {
+          state.update_user_loading = false;
+          state.user = action.payload;
+        })
+        .addCase(updateUser.rejected, (state) => {
+          state.update_user_loading = false;
+        })  
     },
   });
   

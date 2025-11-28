@@ -79,10 +79,14 @@ const SettingScreen = () => {
       
       // Update backend if needed
         await dispatch(updateSetting(payload)).unwrap();
-    } catch (error) {
+    } catch (err: any) {
       // Revert on error
       setNotifications(prev => ({ ...prev, [key]: notifications[key as keyof typeof notifications] }));
-      console.error('Failed to update notification setting:', error);
+      const errorMessage = err?.payload?.response?.data?.message || 
+        err?.response?.data?.message || 
+        err?.message || 
+        'Failed to update notification setting. Please try again.';
+        toast.error(errorMessage);
     } finally {
       setItemLoadingState(key, false);
     }
@@ -90,10 +94,6 @@ const SettingScreen = () => {
 
   const handleDeleteAllData = async () => {
     toast.success('Coming soon');
-  };
-
-  const handleExportData = async () => {
-    router.push('/export');
   };
 
   const notificationSettings: SettingItem[] = [
@@ -209,7 +209,9 @@ const SettingScreen = () => {
       description: 'Download all your data',
       icon: Download,
       color: '#06B6D4',
-      onClick: handleExportData,
+      onClick: () => {
+        router.push('/export');
+      },
       loading: itemLoading['exportData'] || false,
     },
     // {
@@ -256,7 +258,7 @@ const SettingScreen = () => {
   ];
 
   return (
-    <Layout pageHeading="Settings" showNotificationBell={false} showProfile={false}>
+    <Layout pageHeading="Settings" showProfile={false}>
       <div className="px-4 sm:px-6 py-6 space-y-6 pb-24">
         {/* Appearance */}
         <SettingsGroup

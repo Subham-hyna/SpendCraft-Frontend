@@ -3,6 +3,7 @@ import React from 'react';
 import { Menu, Bell } from 'lucide-react';
 import { useSidebar } from '@/hooks/useSidebar';
 import { useAppSelector } from '@/store';
+import { useRouter } from 'next/navigation';
 
 interface HeaderNavProps {
   showNotificationBell?: boolean;
@@ -17,7 +18,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
 }) => {
   const { openSidebar } = useSidebar();
   const user = useAppSelector((state) => state.auth.user);
-
+  const router = useRouter();
   // Extract first name from user's name
   const firstName = user?.name?.split(' ')[0] || 'User';
   const userInitial = firstName.charAt(0).toUpperCase();
@@ -42,7 +43,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
           ) : showProfile ? (
             <>
               {/* User Avatar */}
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-sm">
+              <div className={`w-10 h-10 ${!user?.photo_uri ? 'bg-gradient-to-br from-purple-400 to-purple-500' : ''} rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-sm ${user?.photo_uri ? 'border border-indigo-200 dark:border-indigo-300' : ''}`}>
                 {user?.photo_uri ? (
                   <img
                     src={user.photo_uri}
@@ -74,6 +75,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
           <button
             className="relative p-2 rounded-lg transition-colors"
             aria-label="Notifications"
+            onClick={() => router.push('/notification')}
           >
             <Bell size={24} strokeWidth={1.5} className="w-6 h-6 text-gray-700 dark:text-gray-200" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>

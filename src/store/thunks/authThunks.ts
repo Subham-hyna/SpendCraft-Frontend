@@ -29,3 +29,30 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
     removeCookie('access_token'); 
   }
 });
+
+export const uploadImage = createAsyncThunk('auth/uploadImage', async (payload: any, { rejectWithValue }) => {
+  try {
+    const data = await userService.uploadImage(payload);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error);
+  }
+});
+
+export const profileStats = createAsyncThunk('auth/profileStats', async (_, { rejectWithValue }) => {
+  try {
+    const data = await userService.profileStats();
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error);
+  }
+});
+
+export const updateUser = createAsyncThunk('auth/updateUser', async (payload: any, { rejectWithValue }) => {
+  try {
+    const data = await userService.updateUser(payload);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error);
+  }
+});

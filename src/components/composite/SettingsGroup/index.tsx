@@ -29,7 +29,7 @@ interface SettingsGroupProps {
 const SettingsGroup: React.FC<SettingsGroupProps> = ({
   title,
   id,
-  titleColor = 'text-gray-900',
+  titleColor = 'text-gray-900 dark:text-gray-100',
   items,
   loading = false,
   className = '',

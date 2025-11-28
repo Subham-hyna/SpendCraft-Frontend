@@ -49,7 +49,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
     } else if (!category && open) {
       // Reset form for create mode
       setCategoryName('');
-      setSelectedIcon('📦');
+      setSelectedIcon('🍔');
       setSelectedColor('#FEF3E2');
       setSubcategories(['']);
     }

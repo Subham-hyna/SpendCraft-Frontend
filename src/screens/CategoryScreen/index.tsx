@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { deleteCategory, getCategories } from '@/store/thunks/categoryThunks';
 import CreateUpdateCategory from '@/components/composite/Drawer/CreateUpdateCategory';
 import { AlertDialogComponent } from '@/components/composite/AlertDialog';
+import toast from 'react-hot-toast';
 
 const CategoryScreen = () => {
   const { categories } = useAppSelector((state) => state.categories);
@@ -40,12 +41,20 @@ const CategoryScreen = () => {
   };
 
   const handleDelete = async () => {
-    if (categoryToDelete) {
-      await dispatch(deleteCategory(categoryToDelete._id));
-      setDeleteDialogOpen(false);
-      setCategoryToDelete(null);
-      // Refetch categories after delete
-      dispatch(getCategories());
+    try {
+        if (categoryToDelete) {
+            await dispatch(deleteCategory(categoryToDelete._id)).unwrap();
+            setDeleteDialogOpen(false);
+            setCategoryToDelete(null);
+            // Refetch categories after delete
+            dispatch(getCategories());
+        }
+    } catch (err: any) {
+        const errorMessage = err?.payload?.response?.data?.message || 
+            err?.response?.data?.message || 
+            err?.message || 
+            'Failed to delete category. Please try again.';
+            toast.error(errorMessage);
     }
   };
 

@@ -4,6 +4,8 @@ export interface User {
     name: string;
     photo_uri: string;
     is_new_user: boolean;
+    phone_no?: string;
+    location?: string;
 }
 
 export interface GoogleLoginResponse {
@@ -38,4 +40,10 @@ export interface Setting {
         push: boolean;
         email: boolean;
     };
+}
+
+export interface ProfileStatsResponse {
+    total_expenses: number;
+    total_categories: number;
+    this_month_expenses: number;
 }
