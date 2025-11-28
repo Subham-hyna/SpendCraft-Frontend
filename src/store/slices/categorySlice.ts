@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchUser, login, logout } from "@/store/thunks";
 import { Category, User } from "@/types/apiResponse";
-import { createCategory, deleteCategory, getCategories, updateCategory } from "../thunks/categorySlice";
+import { createCategory, deleteCategory, getCategories, updateCategory } from "../thunks/categoryThunks";
 
 interface CategoryState {
   categories: Category[];

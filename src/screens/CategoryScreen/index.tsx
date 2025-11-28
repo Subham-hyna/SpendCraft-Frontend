@@ -7,7 +7,7 @@ import { Copy, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Category } from '@/types/apiResponse';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { deleteCategory, getCategories } from '@/store/thunks/categorySlice';
+import { deleteCategory, getCategories } from '@/store/thunks/categoryThunks';
 import CreateUpdateCategory from '@/components/composite/Drawer/CreateUpdateCategory';
 import { AlertDialogComponent } from '@/components/composite/AlertDialog';
 

@@ -1,6 +1,5 @@
 import axiosInstance from '@/services/axiosInstance';
 import { Category, CreateUpdateCategoryResponse, GoogleLoginResponse } from '@/types/apiResponse';
-import { removeCookie, setCookie, setToken, clearTokens } from '@/services/axiosInstance';
 
 export const prefix = 'category';
 

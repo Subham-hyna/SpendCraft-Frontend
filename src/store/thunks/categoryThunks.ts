@@ -1,10 +1,7 @@
-import { authService } from '@/services/authService';
-import { clearTokens, removeCookie } from '@/services/axiosInstance';
 import { categoryService } from '@/services/categoryService';
-import { userService } from '@/services/userService';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 // 🔹 Async Thunks (Redux way to handle async calls)
-export const getCategories = createAsyncThunk('category/getCategories', async (_, { rejectWithValue }) => {
+export const getCategories = createAsyncThunk('category/get', async (_, { rejectWithValue }) => {
   try {
     const data = await categoryService.getCategories();
     return data;
@@ -13,7 +10,7 @@ export const getCategories = createAsyncThunk('category/getCategories', async (_
   }
 });
 
-export const createCategory = createAsyncThunk('category/createCategory', async (payload: any, { rejectWithValue }) => {
+export const createCategory = createAsyncThunk('category/create', async (payload: any, { rejectWithValue }) => {
   try {
     const data = await categoryService.createCategory(payload);
     return data;
@@ -22,7 +19,7 @@ export const createCategory = createAsyncThunk('category/createCategory', async 
   }
 });
 
-export const updateCategory = createAsyncThunk('category/updateCategory', async (payload: any, { rejectWithValue }) => {
+export const updateCategory = createAsyncThunk('category/update', async (payload: any, { rejectWithValue }) => {
   try {
     const data = await categoryService.updateCategory(payload);
     return data;
@@ -31,7 +28,7 @@ export const updateCategory = createAsyncThunk('category/updateCategory', async 
   }
 });
 
-export const deleteCategory = createAsyncThunk('category/deleteCategory', async (categoryId: string, { rejectWithValue }) => {
+export const deleteCategory = createAsyncThunk('category/delete', async (categoryId: string, { rejectWithValue }) => {
   try {
     const data = await categoryService.deleteCategory(categoryId);
     return data;

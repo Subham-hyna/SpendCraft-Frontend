@@ -31,3 +31,11 @@ export interface Subcategory {
     _id: string;
     name: string;
 }
+
+export interface Setting {
+    _id: string;
+    notification: {
+        push: boolean;
+        email: boolean;
+    };
+}
