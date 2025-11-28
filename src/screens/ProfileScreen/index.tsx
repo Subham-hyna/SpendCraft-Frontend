@@ -2,10 +2,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Layout from '@/components/composite/layout'
 import { useAppDispatch, useAppSelector } from '@/store';
-import { profileStats, uploadImage } from '@/store/thunks/authThunks';
+import { logout, profileStats, uploadImage } from '@/store/thunks/authThunks';
 import SettingsGroup, { SettingItem } from '@/components/composite/SettingsGroup';
 import ContactInfo from '@/components/composite/ContactInfo';
-import { Bell, Crown, Camera, Globe, HelpCircle, Moon, Palette, Settings, Shield, User, Calendar, DollarSign } from 'lucide-react';
+import { Bell, Crown, Camera, Globe, HelpCircle, Moon, Palette, Settings, Shield, User, Calendar, DollarSign, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/atomic/spinner';
 import EditProfile from '@/components/composite/Drawer/EditProfile';
@@ -20,6 +20,15 @@ const ProfileScreen = () => {
     useEffect(() => {
         dispatch(profileStats());
     }, []);
+
+    const handleLogout = async () => {
+        try {
+            await dispatch(logout()).unwrap();
+            router.push('/login');
+        } catch (err: any) {
+            console.log(err);
+        }
+    }
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -36,13 +45,13 @@ const ProfileScreen = () => {
 
     const accountSettings: SettingItem[] = [
         {
-          id: 'edit',
-          label: 'Edit Profile',
-          icon: User,
-          color: "#4A90E2",
-          onClick: () => {
-            setEditProfileOpen(true);
-          },
+            id: 'edit',
+            label: 'Edit Profile',
+            icon: User,
+            color: "#4A90E2",
+            onClick: () => {
+                setEditProfileOpen(true);
+            },
         },
         {
             id: 'notification',
@@ -108,9 +117,9 @@ const ProfileScreen = () => {
     ];
 
     const userStats = [
-        { id: 1, label: 'Total Expenses', value: profile_stats?.total_expenses || 0, icon: DollarSign, color: '#FF6B35' , path: '/expense' },
-        { id: 2, label: 'Categories', value: profile_stats?.total_categories || 0, icon: Palette, color: '#4A90E2' , path: '/category' },
-        { id: 3, label: 'This Month', value: profile_stats?.this_month_expenses || 0, icon: Calendar, color: '#10B981' , path: '/expense' }
+        { id: 1, label: 'Total Expenses', value: profile_stats?.total_expenses || 0, icon: DollarSign, color: '#FF6B35', path: '/expense' },
+        { id: 2, label: 'Categories', value: profile_stats?.total_categories || 0, icon: Palette, color: '#4A90E2', path: '/category' },
+        { id: 3, label: 'This Month', value: profile_stats?.this_month_expenses || 0, icon: Calendar, color: '#10B981', path: '/expense' }
     ];
 
     return (
@@ -200,8 +209,13 @@ const ProfileScreen = () => {
                     title="Support"
                     items={supportSettings}
                 />
+
+                <button onClick={handleLogout} className="w-full bg-white border border-red-200 text-red-500 rounded-2xl py-4 flex items-center justify-center gap-2 hover:bg-red-50 transition-all shadow-sm font-light">
+                    <LogOut size={20} strokeWidth={1.5} />
+                    Logout
+                </button>
             </div>
-            <EditProfile 
+            <EditProfile
                 open={editProfileOpen}
                 onOpenChange={setEditProfileOpen}
             />
