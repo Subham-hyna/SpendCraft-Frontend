@@ -210,7 +210,7 @@ const ProfileScreen = () => {
                     items={supportSettings}
                 />
 
-                <button onClick={handleLogout} className="w-full bg-white border border-red-200 text-red-500 rounded-2xl py-4 flex items-center justify-center gap-2 hover:bg-red-50 transition-all shadow-sm font-light">
+                <button onClick={handleLogout} className="w-full bg-white dark:bg-red-100 border border-red-200 text-red-500 rounded-2xl py-4 flex items-center justify-center gap-2 hover:bg-red-50 transition-all shadow-sm font-light">
                     <LogOut size={20} strokeWidth={1.5} />
                     Logout
                 </button>
