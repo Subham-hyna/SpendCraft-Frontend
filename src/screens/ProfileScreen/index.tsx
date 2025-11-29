@@ -23,8 +23,8 @@ const ProfileScreen = () => {
 
     const handleLogout = async () => {
         try {
-            await dispatch(logout()).unwrap();
             router.push('/login');
+            await dispatch(logout()).unwrap();
         } catch (err: any) {
             console.log(err);
         }
