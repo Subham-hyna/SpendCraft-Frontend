@@ -33,9 +33,8 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-        removeCookie('access_token');
-        router.push('/login');
         await dispatch(logout()).unwrap();
+        router.push('/login');
     } catch (err: any) {
         console.log(err);
     }

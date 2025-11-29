@@ -12,7 +12,7 @@ import EditProfile from '@/components/composite/Drawer/EditProfile';
 import { removeCookie } from '@/services/axiosInstance'
 
 const ProfileScreen = () => {
-    const { profile_stats_loading, profile_stats, user, upload_image_loading } = useAppSelector((state) => state.auth);
+    const { profile_stats_loading, profile_stats, user, upload_image_loading, logout_loading } = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
@@ -24,7 +24,6 @@ const ProfileScreen = () => {
 
     const handleLogout = async () => {
         try {
-            removeCookie('access_token');
             await dispatch(logout()).unwrap();
             router.push('/login');
         } catch (err: any) {
@@ -213,7 +212,11 @@ const ProfileScreen = () => {
                 />
 
                 <button onClick={handleLogout} className="w-full bg-white dark:bg-red-100 border border-red-200 text-red-500 rounded-2xl py-4 flex items-center justify-center gap-2 hover:bg-red-50 transition-all shadow-sm font-light">
-                    <LogOut size={20} strokeWidth={1.5} />
+                    {logout_loading ? (
+                        <Spinner />
+                    ) : (
+                        <LogOut size={20} strokeWidth={1.5} />
+                    )}
                     Logout
                 </button>
             </div>
