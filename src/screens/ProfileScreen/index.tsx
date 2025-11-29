@@ -9,6 +9,7 @@ import { Bell, Crown, Camera, Globe, HelpCircle, Moon, Palette, Settings, Shield
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/atomic/spinner';
 import EditProfile from '@/components/composite/Drawer/EditProfile';
+import { removeCookie } from '@/services/axiosInstance'
 
 const ProfileScreen = () => {
     const { profile_stats_loading, profile_stats, user, upload_image_loading } = useAppSelector((state) => state.auth);
@@ -23,8 +24,9 @@ const ProfileScreen = () => {
 
     const handleLogout = async () => {
         try {
-            router.push('/login');
+            removeCookie('access_token');
             await dispatch(logout()).unwrap();
+            router.push('/login');
         } catch (err: any) {
             console.log(err);
         }

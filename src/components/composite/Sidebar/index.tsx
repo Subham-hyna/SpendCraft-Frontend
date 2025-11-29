@@ -10,6 +10,7 @@ import { menuItems } from './menuItems'
 import { logout } from '@/store/thunks/authThunks'
 import { useAppDispatch } from '@/store'
 import { Spinner } from '@/components/atomic/spinner'
+import { removeCookie } from '@/services/axiosInstance'
 
 const Sidebar = () => {
   const { isSidebarOpen: isOpen, closeSidebar: onClose } = useSidebar()
@@ -32,6 +33,7 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
+        removeCookie('access_token');
         router.push('/login');
         await dispatch(logout()).unwrap();
     } catch (err: any) {
