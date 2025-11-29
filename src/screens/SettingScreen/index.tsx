@@ -22,6 +22,7 @@ import {
   Trash2,
   Download,
   RefreshCw,
+  AlertTriangle,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -98,12 +99,21 @@ const SettingScreen = () => {
 
   const notificationSettings: SettingItem[] = [
     {
+       id: 'alert',
+       label: 'Alerts & Reminders',
+       icon: AlertTriangle,
+       color: "#F59E0B",
+       onClick: () => {
+           router.push('/alert');
+       },
+    },
+    {
       id: 'push',
       label: 'Push Notifications',
       description: 'Get notified about expenses',
       icon: Bell,
       toggle: true,
-      color: "#F59E0B",
+      color: "#8B5CF6",
       state: notifications.push,
       setState: (value) => toggleNotification('push'),
       loading: itemLoading['push'] || false,

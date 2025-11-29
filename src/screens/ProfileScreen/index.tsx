@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { logout, profileStats, uploadImage } from '@/store/thunks/authThunks';
 import SettingsGroup, { SettingItem } from '@/components/composite/SettingsGroup';
 import ContactInfo from '@/components/composite/ContactInfo';
-import { Bell, Crown, Camera, Globe, HelpCircle, Moon, Palette, Settings, Shield, User, Calendar, DollarSign, LogOut } from 'lucide-react';
+import { Bell, Crown, Camera, Globe, HelpCircle, Moon, Palette, Settings, Shield, User, Calendar, DollarSign, LogOut, AlertTriangle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/atomic/spinner';
 import EditProfile from '@/components/composite/Drawer/EditProfile';
@@ -61,6 +61,15 @@ const ProfileScreen = () => {
             color: "#10B981",
             onClick: () => {
                 router.push('/notification');
+            },
+        },
+        {
+            id: 'alert',
+            label: 'Alerts & Reminders',
+            icon: AlertTriangle,
+            color: "#8B5CF6",
+            onClick: () => {
+                router.push('/alert');
             },
         },
         // {

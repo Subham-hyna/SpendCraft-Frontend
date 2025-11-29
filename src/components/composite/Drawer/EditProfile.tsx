@@ -18,7 +18,8 @@ import React, { useState, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store"
 import { updateUser, fetchUser } from "@/store/thunks/authThunks"
 import { toast } from "react-hot-toast"
-import { Phone, MapPin } from "lucide-react"
+import { Phone, MapPin, Locate } from "lucide-react"
+import { detectUserLocation, getGeolocationErrorMessage, isGeolocationSupported } from "@/lib/locationUtils"
 
 interface EditProfileProps {
   trigger?: React.ReactNode;
@@ -39,6 +40,7 @@ const EditProfile = ({ trigger, className, open: controlledOpen, onOpenChange }:
   const [phoneNumber, setPhoneNumber] = useState('');
   const [location, setLocation] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [detectingLocation, setDetectingLocation] = useState(false);
 
   // Initialize form when drawer opens
   useEffect(() => {
@@ -126,6 +128,31 @@ const EditProfile = ({ trigger, className, open: controlledOpen, onOpenChange }:
     if (phoneError) {
       const currentCode = value.startsWith('+') ? value : '+' + value.replace(/\D/g, '').slice(0, 2);
       validatePhoneNumber(currentCode, phoneNumber);
+    }
+  };
+
+  const detectLocation = async () => {
+    if (!isGeolocationSupported()) {
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    setDetectingLocation(true);
+
+    try {
+      const formattedLocation = await detectUserLocation();
+      setLocation(formattedLocation);
+    } catch (error: any) {
+      console.error('Error detecting location:', error);
+      
+      // Check if it's a GeolocationPositionError
+      if (error.code !== undefined && error.message) {
+        toast.error(getGeolocationErrorMessage(error));
+      } else {
+        toast.error(error.message || 'Failed to detect location. Please enter manually.');
+      }
+    } finally {
+      setDetectingLocation(false);
     }
   };
 
@@ -233,14 +260,32 @@ const EditProfile = ({ trigger, className, open: controlledOpen, onOpenChange }:
                   Location
                 </div>
               </Label>
-              <Input
-                type="text"
-                style={{ borderRadius: '8px' }}
-                placeholder="e.g., Mumbai, India"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-4 py-5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
-              />
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  style={{ borderRadius: '8px' }}
+                  placeholder="e.g., Mumbai, India"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="flex-1 px-4 py-5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
+                />
+                <Button
+                  type="button"
+                  onClick={detectLocation}
+                  disabled={detectingLocation}
+                  className=" flex items-center justify-center px-4 py-5 bg-indigo-500 dark:bg-indigo-600 text-white hover:bg-indigo-600 dark:hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all"
+                  title="Detect location from your device"
+                >
+                  {detectingLocation ? (
+                    <Spinner className="w-5 h-5" />
+                  ) : (
+                    <Locate size={30} strokeWidth={1.5} />
+                  )}
+                </Button>
+              </div>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                Click the navigation icon to automatically detect your location
+              </p>
             </div>
           </div>
 
