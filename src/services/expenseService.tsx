@@ -1,17 +1,23 @@
 import axiosInstance from '@/services/axiosInstance';
+import { Expense, FetchExpensesPayload, FetchExpensesResponse } from '@/types/apiResponse';
 
 export const prefix = 'expense';
 
 export const expenseService = {
   // GET all expenses
-  getAll: async () => {
-    const response = await axiosInstance.get(`/${prefix}/expenses`);
+  getAll: async (payload: FetchExpensesPayload): Promise<FetchExpensesResponse> => {
+    const response = await axiosInstance.get(`/${prefix}`, { params: payload });
     return response.data;
   },
 
   // GET single expense
   getById: async (id: string) => {
-    const response = await axiosInstance.get(`/${prefix}/expenses/${id}`);
+    const response = await axiosInstance.get(`/${prefix}/${id}`);
+    return response.data;
+  },
+
+  delete: async (id: string) => {
+    const response = await axiosInstance.delete(`/${prefix}/${id}`);
     return response.data;
   }
 };

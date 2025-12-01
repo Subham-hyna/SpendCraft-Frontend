@@ -1,16 +1,17 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { Home, BarChart3, Calendar, User, Plus } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
+import CreateUpdateExpense from '../Drawer/CreateUpdateExpense';
 
 const BottomNavigation = () => {
   const pathname = usePathname();
   const router = useRouter();
-
+  const [open, setOpen] = useState(false);
   const navItems = [
     { id: 'home', label: 'Home', icon: Home, path: '/home' },
     { id: 'stats', label: 'Stats', icon: BarChart3, path: '/stat' },
-    { id: 'add', label: 'Add', icon: Plus, isCenter: true, path: '/add' },
+    { id: 'add', label: 'Add', icon: Plus, isCenter: true, onClick: () => setOpen(true) },
     { id: 'calendar', label: 'Calendar', icon: Calendar, path: '/calendar' },
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
   ];
@@ -30,7 +31,11 @@ const BottomNavigation = () => {
             return (
               <button
                 key={item.id}
-                onClick={() => handleNavigation(item.path)}
+                onClick={() => {
+                  if (item.id === 'add') {
+                    setOpen(true);
+                  }
+                }}
                 className="relative -mt-8"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-400 dark:from-indigo-600 dark:to-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg dark:shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all">
@@ -46,7 +51,7 @@ const BottomNavigation = () => {
           return (
             <button
               key={item.id}
-              onClick={() => handleNavigation(item.path)}
+              onClick={() => handleNavigation(item?.path || '')}
               className={`flex flex-col items-center gap-1 p-2 transition-colors ${
                 isActive
                   ? 'text-indigo-500 dark:text-indigo-400'
@@ -59,6 +64,7 @@ const BottomNavigation = () => {
           );
         })}
       </div>
+      <CreateUpdateExpense open={open} onOpenChange={setOpen} />
     </div>
   );
 };

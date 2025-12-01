@@ -43,7 +43,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
           ) : showProfile ? (
             <>
               {/* User Avatar */}
-              <div className={`w-10 h-10 ${!user?.photo_uri ? 'bg-gradient-to-br from-purple-400 to-purple-500' : ''} rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-sm ${user?.photo_uri ? 'border border-indigo-200 dark:border-indigo-300' : ''}`}>
+              <div onClick={() => router.push('/profile')} className={`w-10 h-10 ${!user?.photo_uri ? 'bg-gradient-to-br from-purple-400 to-purple-500' : ''} rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-sm ${user?.photo_uri ? 'border border-indigo-200 dark:border-indigo-300' : ''}`}>
                 {user?.photo_uri ? (
                   <img
                     src={user.photo_uri}

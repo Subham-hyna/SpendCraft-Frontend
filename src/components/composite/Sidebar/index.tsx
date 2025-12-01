@@ -81,7 +81,7 @@ const Sidebar = () => {
           </div>
 
           {/* Profile Section */}
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3' onClick={() => handleNavigation('/profile')}>
             {user?.photo_uri ? (
               <Image
                 src={user.photo_uri}
