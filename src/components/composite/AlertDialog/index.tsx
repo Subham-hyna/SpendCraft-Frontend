@@ -41,11 +41,27 @@ import {
     onOpenChange,
   }: AlertDialogProps) {
     const handleAction = async () => {
-      await onAction();
+      try {
+        await onAction();
+        // Only close the dialog after action completes successfully
+        if (onOpenChange) {
+          onOpenChange(false);
+        }
+      } catch (error) {
+        // If action fails, keep dialog open
+        console.error('Action failed:', error);
+      }
+    };
+
+    const handleOpenChange = (newOpen: boolean) => {
+      // Prevent closing while loading
+      if (!loading && onOpenChange) {
+        onOpenChange(newOpen);
+      }
     };
 
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={open} onOpenChange={handleOpenChange}>
         {trigger && (
           <AlertDialogTrigger asChild>
             {trigger}
@@ -64,14 +80,14 @@ import {
             <AlertDialogCancel onClick={onCancel} disabled={loading}>
               {cancelLabel}
             </AlertDialogCancel>
-            <AlertDialogAction
+            <Button
               onClick={handleAction}
               disabled={loading}
               className={variant === "destructive" ? "bg-destructive text-white hover:bg-destructive/90" : ""}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {actionLabel}
-            </AlertDialogAction>
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

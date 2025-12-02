@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchExpenses, createExpense, deleteExpense, getExpenseById } from "@/store/thunks";
+import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense } from "@/store/thunks";
 import { Expense, Pagination } from "@/types/apiResponse";
 interface ExpenseState {
   expenses: Expense[];
@@ -8,6 +8,7 @@ interface ExpenseState {
   fetch_expense_by_id_loading: boolean;
   delete_expense_loading: boolean;
   expense: Expense | null;
+  create_update_expense_loading: boolean;
 }
 
 const initialState: ExpenseState = {
@@ -17,6 +18,7 @@ const initialState: ExpenseState = {
   fetch_expense_by_id_loading: false,
   delete_expense_loading: false,
   expense: null,
+  create_update_expense_loading: false,
 };
 
 const expenseSlice = createSlice({
@@ -73,6 +75,28 @@ const expenseSlice = createSlice({
         })
         .addCase(deleteExpense.rejected, (state) => {
           state.delete_expense_loading = false;
+        })
+
+        // Create Expense
+        .addCase(createExpense.pending, (state) => {
+          state.create_update_expense_loading = true;
+        })
+        .addCase(createExpense.fulfilled, (state, action) => {
+          state.create_update_expense_loading = false;
+        })
+        .addCase(createExpense.rejected, (state) => {
+          state.create_update_expense_loading = false;
+        })
+
+        // Update Expense
+        .addCase(updateExpense.pending, (state) => {
+          state.create_update_expense_loading = true;
+        })
+        .addCase(updateExpense.fulfilled, (state, action) => {
+          state.create_update_expense_loading = false;
+        })
+        .addCase(updateExpense.rejected, (state) => {
+          state.create_update_expense_loading = false;
         })
     },
   });

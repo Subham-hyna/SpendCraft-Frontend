@@ -73,46 +73,26 @@ export function formatCompactCurrency(
     // Crores (1,00,00,000 and above)
     const crores = absAmount / 10000000;
     if (showDecimals && crores % 1 !== 0) {
-      return `${sign}${crores.toFixed(1)}Cr`;
+      return `₹${sign}${crores.toFixed(1)}Cr`;
     }
-    return `${sign}${Math.round(crores)}Cr`;
+    return `₹${sign}${Math.round(crores)}Cr`;
   } else if (absAmount >= 100000) {
     // Lakhs (1,00,000 to 99,99,999)
     const lakhs = absAmount / 100000;
     if (showDecimals && lakhs % 1 !== 0) {
-      return `${sign}${lakhs.toFixed(1)}L`;
+      return `₹${sign}${lakhs.toFixed(1)}L`;
     }
-    return `${sign}${Math.round(lakhs)}L`;
+    return `₹${sign}${Math.round(lakhs)}L`;
   } else if (absAmount >= 1000) {
     // Thousands (1,000 to 99,999)
     const thousands = absAmount / 1000;
     if (showDecimals && thousands % 1 !== 0) {
-      return `${sign}${thousands.toFixed(1)}k`;
+      return `₹${sign}${thousands.toFixed(1)}k`;
     }
-    return `${sign}${Math.round(thousands)}k`;
+    return `₹${sign}${Math.round(thousands)}k`;
   } else {
     // Less than 1000, return as is
-    return `${sign}${Math.round(absAmount)}`;
+    return `₹${sign}${Math.round(absAmount)}`;
   }
-}
-
-/**
- * Formats a number as Indian currency with compact notation
- * Combines both functions - shows compact format with ₹ symbol
- * @param amount - The amount to format (number or string)
- * @param showDecimals - Whether to show decimal places (default: true)
- * @returns Formatted string with ₹ symbol and compact notation
- * 
- * @example
- * formatCurrencyCompact(11000) // "₹11k"
- * formatCurrencyCompact(150000) // "₹1.5L"
- * formatCurrencyCompact(23000000) // "₹2.3Cr"
- */
-export function formatCurrencyCompact(
-  amount: number | string,
-  showDecimals: boolean = true
-): string {
-  const compact = formatCompactCurrency(amount, showDecimals);
-  return `₹${compact}`;
 }
 

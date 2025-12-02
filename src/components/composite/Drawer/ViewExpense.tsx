@@ -14,6 +14,7 @@ import { Spinner } from '@/components/atomic/spinner';
 import { convertFromUTC, DateFormats } from '@/lib/dateUtils';
 import { Expense, LineItem } from '@/types/apiResponse';
 import ExpenseViewDetailRow from '@/components/composite/ExpenseViewDetailRow';
+import { formatIndianCurrency } from '@/lib/currencyFormat';
 
 interface ViewExpenseProps {
   open: boolean;
@@ -127,7 +128,7 @@ const ViewExpense = ({ open, onOpenChange, expenseId, expenseData, onEdit, onDel
                   <span className="text-5xl">{displayExpense.category_id?.icon || '💰'}</span>
                 </div>
                 <h1 className="text-4xl sm:text-5xl font-light text-gray-900 dark:text-gray-100 mb-3">
-                  ₹{displayExpense.amount}
+                  {formatIndianCurrency(displayExpense.amount)}
                 </h1>
                 <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 font-light">
                   {displayExpense.title}
@@ -182,7 +183,7 @@ const ViewExpense = ({ open, onOpenChange, expenseId, expenseData, onEdit, onDel
                       {displayExpense.line_items.map((item: LineItem) => (
                         <div key={item._id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl p-3">
                           <p className="text-sm text-gray-700 dark:text-gray-300 font-light">{item.title}</p>
-                          <p className="text-sm text-gray-900 dark:text-gray-100 font-medium">₹{item.amount}</p>
+                          <p className="text-sm text-gray-900 dark:text-gray-100 font-medium">{formatIndianCurrency(item.amount)}</p>
                         </div>
                       ))}
                     </div>

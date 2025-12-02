@@ -19,5 +19,15 @@ export const expenseService = {
   delete: async (id: string) => {
     const response = await axiosInstance.delete(`/${prefix}/${id}`);
     return response.data;
+  },
+
+  create: async (payload: any) => {
+    const response = await axiosInstance.post(`/${prefix}`, payload);
+    return response.data;
+  },
+
+  update: async (id: string, payload: any) => {
+    const response = await axiosInstance.patch(`/${prefix}/${id}`, payload);
+    return response.data;
   }
 };

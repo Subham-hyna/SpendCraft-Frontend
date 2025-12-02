@@ -6,6 +6,7 @@ import ExpenseSearchBar from '@/components/composite/ExpenseSearchBar';
 import Header2 from '@/components/composite/Header2/Header2';
 import Layout from '@/components/composite/layout';
 import ViewExpense from '@/components/composite/Drawer/ViewExpense';
+import CreateUpdateExpense from '@/components/composite/Drawer/CreateUpdateExpense';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { resetExpenses } from '@/store/slices/expenseSlice';
 import { fetchExpenses, deleteExpense } from '@/store/thunks/expenseThunks';
@@ -22,8 +23,10 @@ export const ExpenseScreen = () => {
     const [sortDrawerOpen, setSortDrawerOpen] = useState<boolean>(false);
     const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
     const [viewExpenseDrawerOpen, setViewExpenseDrawerOpen] = useState<boolean>(false);
+    const [editExpenseDrawerOpen, setEditExpenseDrawerOpen] = useState<boolean>(false);
     const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null);
     const [selectedExpenseData, setSelectedExpenseData] = useState<Expense | null>(null);
+    const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null);
     const [sort, setSort] = useState<string>('date_recent_to_old');
     const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -41,7 +44,7 @@ export const ExpenseScreen = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
-    const { expenses, fetch_expenses_loading, hasMore, delete_expense_loading } = useAppSelector((state: any) => state.expenses);
+    const { expenses, fetch_expenses_loading, hasMore, delete_expense_loading, create_update_expense_loading } = useAppSelector((state: any) => state.expenses);
     const dispatch = useAppDispatch();
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -179,7 +182,7 @@ export const ExpenseScreen = () => {
         }
         
         dispatch(fetchExpenses(payload));
-    }, [sort, searchQuery, selectedCategories, amountMin, amountMax, dispatch, getDateRangeFromSelection]);
+    }, [sort, searchQuery, selectedCategories, amountMin, amountMax, dispatch, getDateRangeFromSelection, create_update_expense_loading]);
 
     // Fetch expenses when filters or sort change
     useEffect(() => {
@@ -255,8 +258,24 @@ export const ExpenseScreen = () => {
 
     // Handle edit expense
     const handleEditExpense = (expenseId: string) => {
-        // TODO: Implement edit functionality
-        console.log('Edit expense:', expenseId);
+        // Find the expense data from local expenses
+        const expenseData = localExpenses.find(exp => exp._id === expenseId);
+        if (expenseData) {
+            setExpenseToEdit(expenseData);
+            setEditExpenseDrawerOpen(true);
+            // Close the view expense drawer when opening edit
+            setViewExpenseDrawerOpen(false);
+        }
+    };
+
+    // Handle edit expense drawer close
+    const handleEditExpenseClose = (open: boolean) => {
+        setEditExpenseDrawerOpen(open);
+        if (!open) {
+            setExpenseToEdit(null);
+            // Refresh expenses list after update
+            fetchExpensesWithFilters(currentPage);
+        }
     };
 
     // Handle delete expense - opens the confirmation dialog
@@ -365,6 +384,14 @@ export const ExpenseScreen = () => {
                 expenseData={selectedExpenseData}
                 onEdit={handleEditExpense}
                 onDelete={handleDeleteExpense}
+            />
+
+            {/* Edit Expense Modal */}
+            <CreateUpdateExpense
+                open={editExpenseDrawerOpen}
+                onOpenChange={handleEditExpenseClose}
+                expense={expenseToEdit}
+                expenseId={expenseToEdit?._id || null}
             />
 
             {/* Delete Confirmation Dialog */}

@@ -12,12 +12,25 @@ export const deleteExpense = createAsyncThunk('expenses/delete', async (id: stri
   return id;
 });
 
-export const createExpense = createAsyncThunk('expenses/create', async () => {
-  await new Promise(resolve => setTimeout(resolve, 3000));
-  return { id: '1', name: 'Expense 1', amount: 100 };
+export const createExpense = createAsyncThunk('expenses/create', async (payload: any) => {
+  const response = await expenseService.create(payload);
+  return response;
 });
 
-export const getExpenseById = createAsyncThunk('expenses/getById', async (id: string) => {
-  const response = await expenseService.getById(id);
+export const getExpenseById = createAsyncThunk('expenses/getById', async (id: string, { rejectWithValue }) => {
+  try {
+    const response = await expenseService.getById(id);
+    return response;
+  } catch (error: any) {
+    return rejectWithValue(error);
+  }
+});
+
+export const updateExpense = createAsyncThunk('expenses/update', async (payload: any, { rejectWithValue }) => {
+  try {
+  const response = await expenseService.update(payload.id, payload.data);
   return response;
+  } catch (error: any) {
+    return rejectWithValue(error);
+  }
 });

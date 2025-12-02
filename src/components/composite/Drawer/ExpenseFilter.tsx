@@ -16,6 +16,7 @@ import { CheckboxWithLabel } from '@/components/atomic/CheckboxWithLabel';
 import { Calendar } from '@/components/atomic/calendar';
 import { cn } from '@/lib/utils';
 import type { DateRange } from 'react-day-picker';
+import { DateTimePicker24h } from '@/components/atomic/date-time';
 
 interface ExpenseFilterProps {
     open: boolean;
@@ -49,11 +50,100 @@ const ExpenseFilter = ({
     const [amountMax, setAmountMax] = useState<string>(initialAmountMax);
     const [dateRangeValue, setDateRangeValue] = useState<DateRange | undefined>();
     const [expandedSection, setExpandedSection] = useState<string | null>('');
+    const [amountErrors, setAmountErrors] = useState<{ min?: string; max?: string }>({});
+    const [dateRangeErrors, setDateRangeErrors] = useState<{ from?: string; to?: string }>({});
 
     const { categories, fetch_category_loading } = useAppSelector((state: any) => state.categories);
 
     const toggleSection = (section: string) => {
         setExpandedSection(expandedSection === section ? null : section);
+    };
+
+    const validateAmount = (value: string, type: 'min' | 'max'): string | undefined => {
+        if (!value) return undefined;
+        
+        const numValue = parseFloat(value);
+        
+        // Check if value is a valid number
+        if (isNaN(numValue)) {
+            return 'Please enter a valid number';
+        }
+        
+        // Check if value is negative
+        if (numValue < 0) {
+            return 'Amount cannot be less than zero';
+        }
+        
+        return undefined;
+    };
+
+    const validateAmountRange = (min: string, max: string): { min?: string; max?: string } => {
+        const errors: { min?: string; max?: string } = {};
+        
+        if (!min && !max) {
+            return errors;
+        }
+        
+        const minNum = min ? parseFloat(min) : null;
+        const maxNum = max ? parseFloat(max) : null;
+        
+        // Validate individual values
+        if (min && minNum !== null) {
+            const minError = validateAmount(min, 'min');
+            if (minError) {
+                errors.min = minError;
+            }
+        }
+        
+        if (max && maxNum !== null) {
+            const maxError = validateAmount(max, 'max');
+            if (maxError) {
+                errors.max = maxError;
+            }
+        }
+        
+        // Validate min < max only if both are valid numbers
+        if (minNum !== null && maxNum !== null && !errors.min && !errors.max) {
+            if (minNum >= maxNum) {
+                errors.min = 'Min amount must be less than max amount';
+            }
+        }
+        
+        return errors;
+    };
+
+    const validateDateRange = (from?: Date, to?: Date): { from?: string; to?: string } => {
+        const errors: { from?: string; to?: string } = {};
+        
+        // If one is selected, both are required
+        if (from && !to) {
+            errors.to = 'End date is required when start date is selected';
+        }
+        
+        if (to && !from) {
+            errors.from = 'Start date is required when end date is selected';
+        }
+        
+        // Validate start date can't be greater than end date
+        if (from && to) {
+            if (from > to) {
+                errors.from = 'Start date cannot be greater than end date';
+            }
+        }
+        
+        return errors;
+    };
+
+    const handleAmountMinChange = (value: string) => {
+        setAmountMin(value);
+        const errors = validateAmountRange(value, amountMax);
+        setAmountErrors(errors);
+    };
+
+    const handleAmountMaxChange = (value: string) => {
+        setAmountMax(value);
+        const errors = validateAmountRange(amountMin, value);
+        setAmountErrors(errors);
     };
 
     // Update local state when props change
@@ -62,6 +152,8 @@ const ExpenseFilter = ({
         setSelectedDateRange(initialDateRange[0] || '');
         setAmountMin(initialAmountMin);
         setAmountMax(initialAmountMax);
+        setAmountErrors({});
+        setDateRangeErrors({});
     }, [initialCategories, initialDateRange, initialAmountMin, initialAmountMax]);
 
     const dateRanges = [
@@ -82,10 +174,18 @@ const ExpenseFilter = ({
     };
 
     const selectDateRange = (range: string) => {
-        setSelectedDateRange(range);
-        // Clear custom dates if not selecting Custom Range
-        if (range !== 'Custom Range') {
+        // Toggle: if clicking the already selected range, deselect it
+        if (selectedDateRange === range) {
+            setSelectedDateRange('');
             setDateRangeValue(undefined);
+            setDateRangeErrors({});
+        } else {
+            setSelectedDateRange(range);
+            // Clear custom dates if not selecting Custom Range
+            if (range !== 'Custom Range') {
+                setDateRangeValue(undefined);
+                setDateRangeErrors({});
+            }
         }
     };
 
@@ -95,6 +195,8 @@ const ExpenseFilter = ({
         setAmountMin('');
         setAmountMax('');
         setDateRangeValue(undefined);
+        setAmountErrors({});
+        setDateRangeErrors({});
         onFilterApply({
             categories: [],
             dateRange: [],
@@ -105,6 +207,22 @@ const ExpenseFilter = ({
     };
 
     const handleApply = () => {
+        // Validate amounts before applying
+        const amountValidationErrors = validateAmountRange(amountMin, amountMax);
+        if (amountValidationErrors.min || amountValidationErrors.max) {
+            setAmountErrors(amountValidationErrors);
+            return;
+        }
+        
+        // Validate date range if Custom Range is selected
+        if (selectedDateRange === 'Custom Range') {
+            const dateValidationErrors = validateDateRange(dateRangeValue?.from, dateRangeValue?.to);
+            if (dateValidationErrors.from || dateValidationErrors.to) {
+                setDateRangeErrors(dateValidationErrors);
+                return;
+            }
+        }
+        
         const customDateFrom = dateRangeValue?.from ? dateRangeValue.from.toISOString() : '';
         const customDateTo = dateRangeValue?.to ? dateRangeValue.to.toISOString() : '';
         
@@ -248,14 +366,49 @@ const ExpenseFilter = ({
 
                                     {/* Custom Date Range Calendar */}
                                     {selectedDateRange === 'Custom Range' && (
-                                        <div className="mt-4 flex justify-center">
-                                            <Calendar
-                                                mode="range"
-                                                selected={dateRangeValue}
-                                                onSelect={setDateRangeValue}
-                                                className="rounded-lg border border-gray-200 dark:border-gray-700"
-                                                numberOfMonths={1}
-                                            />
+                                        <div className="mt-4 space-y-4">
+                                            <div>
+                                                <DateTimePicker24h
+                                                    label="Start Date & Time"
+                                                    dateTime={dateRangeValue?.from}
+                                                    setDateTime={(date) => {
+                                                        const newRange = {
+                                                            from: date,
+                                                            to: dateRangeValue?.to
+                                                        };
+                                                        setDateRangeValue(newRange);
+                                                        const errors = validateDateRange(newRange.from, newRange.to);
+                                                        setDateRangeErrors(errors);
+                                                    }}
+                                                    placeholder="Select start date & time"
+                                                />
+                                                {dateRangeErrors.from && (
+                                                    <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                                                        {dateRangeErrors.from}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <DateTimePicker24h
+                                                    label="End Date & Time"
+                                                    dateTime={dateRangeValue?.to}
+                                                    setDateTime={(date) => {
+                                                        const newRange = {
+                                                            from: dateRangeValue?.from,
+                                                            to: date
+                                                        };
+                                                        setDateRangeValue(newRange);
+                                                        const errors = validateDateRange(newRange.from, newRange.to);
+                                                        setDateRangeErrors(errors);
+                                                    }}
+                                                    placeholder="Select end date & time"
+                                                />
+                                                {dateRangeErrors.to && (
+                                                    <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                                                        {dateRangeErrors.to}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -297,11 +450,23 @@ const ExpenseFilter = ({
                                             </Label>
                                             <Input
                                                 type="number"
+                                                min="0"
+                                                step="1"
                                                 placeholder="Not Set"
                                                 value={amountMin}
-                                                onChange={(e) => setAmountMin(e.target.value)}
-                                                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
+                                                onChange={(e) => handleAmountMinChange(e.target.value)}
+                                                className={cn(
+                                                    "w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all",
+                                                    amountErrors.min
+                                                        ? "border-red-500 dark:border-red-500 focus:ring-red-500 dark:focus:ring-red-500"
+                                                        : "border-gray-200 dark:border-gray-600 focus:ring-gray-200 dark:focus:ring-gray-600"
+                                                )}
                                             />
+                                            {amountErrors.min && (
+                                                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                                                    {amountErrors.min}
+                                                </p>
+                                            )}
                                         </div>
                                         <div>
                                             <Label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
@@ -309,11 +474,23 @@ const ExpenseFilter = ({
                                             </Label>
                                             <Input
                                                 type="number"
+                                                min="0"
+                                                step="1"
                                                 placeholder="Not Set"
                                                 value={amountMax}
-                                                onChange={(e) => setAmountMax(e.target.value)}
-                                                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:border-transparent transition-all"
+                                                onChange={(e) => handleAmountMaxChange(e.target.value)}
+                                                className={cn(
+                                                    "w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all",
+                                                    amountErrors.max
+                                                        ? "border-red-500 dark:border-red-500 focus:ring-red-500 dark:focus:ring-red-500"
+                                                        : "border-gray-200 dark:border-gray-600 focus:ring-gray-200 dark:focus:ring-gray-600"
+                                                )}
                                             />
+                                            {amountErrors.max && (
+                                                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                                                    {amountErrors.max}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -331,8 +508,14 @@ const ExpenseFilter = ({
                                 Reset
                             </button>
                             <button 
-                                className="flex-1 py-3 bg-indigo-500 dark:bg-indigo-600 text-white rounded-xl font-light hover:bg-indigo-600 dark:hover:bg-indigo-700 transition-all"
+                                className={cn(
+                                    "flex-1 py-3 rounded-xl font-light transition-all",
+                                    amountErrors.min || amountErrors.max || dateRangeErrors.from || dateRangeErrors.to
+                                        ? "bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed"
+                                        : "bg-indigo-500 dark:bg-indigo-600 text-white hover:bg-indigo-600 dark:hover:bg-indigo-700"
+                                )}
                                 onClick={handleApply}
+                                disabled={!!(amountErrors.min || amountErrors.max || dateRangeErrors.from || dateRangeErrors.to)}
                             >
                                 Apply Filters
                             </button>

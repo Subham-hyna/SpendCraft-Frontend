@@ -152,7 +152,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
                     onClick={() => setSelectedIcon(icon)}
                     className={`aspect-square rounded-xl flex items-center justify-center text-2xl transition-all ${
                       selectedIcon === icon
-                        ? 'bg-purple-200 dark:bg-purple-600 scale-95'
+                        ? 'bg-purple-200 dark:bg-purple-600/30 dark:ring-2 dark:ring-purple-400 scale-95'
                         : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
                     }`}
                   >
@@ -211,7 +211,7 @@ const CreateUpdateCategory = ({ trigger, className, category, onClose, open: con
                 ))}
                 <button
                   onClick={addSubcategory}
-                  className="w-full py-3 border-2 border-dashed bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-700 rounded-xl text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 transition-all flex items-center justify-center gap-2 font-light"
+                  className="w-full py-3 border-2 border-dashed bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 transition-all flex items-center justify-center gap-2 font-light"
                 >
                   <Plus size={18} strokeWidth={1.5} />
                   Add Subcategory
