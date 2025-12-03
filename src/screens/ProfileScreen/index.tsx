@@ -23,9 +23,10 @@ const ProfileScreen = () => {
     useEffect(() => {
         const now = getDayjsInUserTimezone();
         const startOfMonth = now.startOf('month');
+        const endOfMonth = now.endOf('month');
         const payload = {
             start_date: toISOUTC(startOfMonth.toDate()),
-            end_date: toISOUTC(now.toDate())
+            end_date: toISOUTC(endOfMonth.toDate())
         }
         dispatch(profileStats(payload));
     }, [])

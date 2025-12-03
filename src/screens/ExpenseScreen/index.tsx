@@ -62,11 +62,6 @@ export const ExpenseScreen = () => {
         }
     }, [searchParams]);
 
-    // Fetch categories on mount
-    useEffect(() => {
-        dispatch(getCategories());
-    }, [dispatch]);
-
     // Sync Redux expenses to local state and remove duplicates
     useEffect(() => {
         if (expenses && expenses.length > 0) {

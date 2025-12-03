@@ -244,7 +244,7 @@ const InputWithDropdown = ({
                           {/* Subcategory count badge */}
                           {subcategoryCount > 0 && (
                             <div
-                              className="px-2 py-1 rounded-md text-xs font-medium shrink-0text-gray-700"
+                              className="px-2 py-1 rounded-md text-xs font-medium shrink-0 text-gray-700"
                               style={{ backgroundColor: category.color }}
                               title={`${subcategoryCount} subcategor${subcategoryCount === 1 ? 'y' : 'ies'}`}
                             >

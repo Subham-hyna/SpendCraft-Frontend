@@ -20,7 +20,7 @@ import { DateTimePicker24h } from '@/components/atomic/date-time'
 import InputWithDropdown from '@/components/composite/InputWithDropdown'
 import { formatIndianCurrency } from '@/lib/currencyFormat'
 import { detectUserLocation, getGeolocationErrorMessage } from '@/lib/locationUtils'
-import { getDayjsInUserTimezone, getDayjsUTC } from '@/lib/dateUtils'
+import { getDayjsInUserTimezone, getDayjsUTC, getUserTimezone } from '@/lib/dateUtils'
 import { toast } from 'react-hot-toast'
 import { LineItem } from '@/types/apiResponse'
 
@@ -281,6 +281,7 @@ const CreateUpdateExpense = ({ open, onOpenChange, expense, expenseId }: CreateU
             title: item.title.trim(),
             amount: item.amount || 0, // Default to 0 if no amount provided
           })),
+        timezone: getUserTimezone(),
       };
 
       if (isUpdateMode && currentExpenseId) {
