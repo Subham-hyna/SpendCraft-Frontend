@@ -106,6 +106,7 @@ const SettingItem: React.FC<SettingItemProps> = ({ item, IconComponent, showBord
       className={`flex items-center justify-between p-4 ${
         showBorder ? 'border-b border-gray-100 dark:border-gray-700' : ''
       } ${item.disabled ? 'opacity-50' : ''}`}
+      onClick={() => item.onClick && item.onClick()}
     >
       <div className="flex items-center gap-3 flex-1">
         <div
