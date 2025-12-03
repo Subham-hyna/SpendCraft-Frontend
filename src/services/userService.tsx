@@ -19,8 +19,10 @@ export const userService = {
     return response.data;
   },
 
-  profileStats: async (): Promise<ProfileStatsResponse> => {
-    const response = await axiosInstance.get(`/${prefix}/profile-stats`);
+  profileStats: async (payload: any): Promise<ProfileStatsResponse> => {
+    const response = await axiosInstance.get(`/${prefix}/profile-stats`, {
+      params: payload,
+    });
     return response.data;
   },
   // PATCH updateUser

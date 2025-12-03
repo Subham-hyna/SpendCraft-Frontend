@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/atomic/spinner';
 import EditProfile from '@/components/composite/Drawer/EditProfile';
 import { removeCookie } from '@/services/axiosInstance'
+import { getDayjsInUserTimezone, toISOUTC } from '@/lib/dateUtils';
+import { formatCompactCurrency } from '@/lib/currencyFormat';
 
 const ProfileScreen = () => {
     const { profile_stats_loading, profile_stats, user, upload_image_loading, logout_loading } = useAppSelector((state) => state.auth);
@@ -19,8 +21,14 @@ const ProfileScreen = () => {
     const [editProfileOpen, setEditProfileOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(profileStats());
-    }, []);
+        const now = getDayjsInUserTimezone();
+        const startOfMonth = now.startOf('month');
+        const payload = {
+            start_date: toISOUTC(startOfMonth.toDate()),
+            end_date: toISOUTC(now.toDate())
+        }
+        dispatch(profileStats(payload));
+    }, [])
 
     const handleLogout = async () => {
         try {
@@ -127,9 +135,9 @@ const ProfileScreen = () => {
     ];
 
     const userStats = [
-        { id: 1, label: 'Total Expenses', value: profile_stats?.total_expenses || 0, icon: DollarSign, color: '#FF6B35', path: '/expense' },
-        { id: 2, label: 'Categories', value: profile_stats?.total_categories || 0, icon: Palette, color: '#4A90E2', path: '/category' },
-        { id: 3, label: 'This Month', value: profile_stats?.this_month_expenses || 0, icon: Calendar, color: '#10B981', path: '/expense' }
+        { id: 1, label: 'Total Expenses', value: profile_stats?.total_expenses_count || 0, icon: Calendar, color: '#FF6B35', path: '/expense' },
+        { id: 2, label: 'Categories', value: profile_stats?.total_categories_count || 0, icon: Palette, color: '#4A90E2', path: '/category' },
+        { id: 3, label: 'This Month', value: formatCompactCurrency(profile_stats?.total_expenses_amount || 0), icon: DollarSign, color: '#10B981', path: '/expense' }
     ];
 
     return (

@@ -43,9 +43,9 @@ export interface Setting {
 }
 
 export interface ProfileStatsResponse {
-    total_expenses: number;
-    total_categories: number;
-    this_month_expenses: number;
+    total_expenses_count: number;
+    total_expenses_amount: number;
+    total_categories_count: number;
 }
 export interface AlertThreshold {
     percentage: number;

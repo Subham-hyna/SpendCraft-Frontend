@@ -78,24 +78,18 @@ const ViewExpense = ({ open, onOpenChange, expenseId, expenseData, onEdit, onDel
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[90vh] dark:bg-gray-800">
-        <DrawerHeader className="sr-only">
-          <DrawerTitle>View Expense</DrawerTitle>
-        </DrawerHeader>
-        <div className="overflow-y-auto">
-          {fetch_expense_by_id_loading && !displayExpense ? (
-          <div className="flex items-center justify-center py-20">
-            <Spinner width={40} height={40} />
-          </div>
-        ) : displayExpense ? (
-          <>
-            {/* Header */}
-            <div className="flex items-center justify-between p-5 sm:p-6 border-b border-gray-100 dark:border-gray-700">
+        <DrawerHeader>
+        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2">
               <button 
                 onClick={handleClose}
                 className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2"
               >
                 <ArrowLeft size={24} strokeWidth={1.5} />
               </button>
+
+              <DrawerTitle className="text-xl font-light text-gray-900 dark:text-gray-100">View Expense</DrawerTitle>
+              </div>
 
               <div className="flex items-center gap-2">
                 {onEdit && (
@@ -116,6 +110,14 @@ const ViewExpense = ({ open, onOpenChange, expenseId, expenseData, onEdit, onDel
                 )}
               </div>
             </div>
+        </DrawerHeader>
+        <div className="overflow-y-auto">
+          {fetch_expense_by_id_loading && !displayExpense ? (
+          <div className="flex items-center justify-center py-20">
+            <Spinner width={40} height={40} />
+          </div>
+        ) : displayExpense ? (
+          <>
 
             {/* Content */}
             <div className="p-6 sm:p-8 space-y-8">

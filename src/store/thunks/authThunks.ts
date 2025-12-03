@@ -39,9 +39,9 @@ export const uploadImage = createAsyncThunk('auth/uploadImage', async (payload: 
   }
 });
 
-export const profileStats = createAsyncThunk('auth/profileStats', async (_, { rejectWithValue }) => {
+export const profileStats = createAsyncThunk('auth/profileStats', async (payload: any, { rejectWithValue }) => {
   try {
-    const data = await userService.profileStats();
+    const data = await userService.profileStats(payload);
     return data;
   } catch (error: any) {
     return rejectWithValue(error);
