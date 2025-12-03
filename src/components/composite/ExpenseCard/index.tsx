@@ -38,7 +38,7 @@ const ExpenseCard = ({ expense, onClick }: ExpenseCardProps) => {
             {expense.category_id?.name}
           </p>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-400 dark:text-gray-500 font-light">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400 dark:text-gray-500 font-light">
             {expense.datetime ? (
               <>
                 <span className="flex items-center gap-1">
