@@ -22,7 +22,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
   // Extract first name from user's name
   const firstName = user?.name?.split(' ')[0] || 'User';
   const userInitial = firstName.charAt(0).toUpperCase();
-
+  const { notifications } = useAppSelector((state) => state.notifications);
   return (
     <header className="bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-800">
       <div className="flex items-center justify-between px-2 py-3">
@@ -78,7 +78,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({
             onClick={() => router.push('/notification')}
           >
             <Bell size={24} strokeWidth={1.5} className="w-6 h-6 text-gray-700 dark:text-gray-200" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+            {notifications.length > 0 && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>}
           </button>
         )}
       </div>

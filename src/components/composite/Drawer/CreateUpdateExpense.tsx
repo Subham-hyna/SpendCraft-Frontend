@@ -58,10 +58,10 @@ const CreateUpdateExpense = ({ open, onOpenChange, expense, expenseId }: CreateU
   const [currentExpenseId, setCurrentExpenseId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (categories) {
+    if (open) {
     dispatch(getCategories());
     }
-  }, [dispatch]);
+  }, [dispatch, open]);
 
   // Update mode and expense ID state when props change
   useEffect(() => {

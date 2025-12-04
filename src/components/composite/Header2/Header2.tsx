@@ -34,7 +34,7 @@ const Header2 = ({ title, description, onFilterClick, onMarkAllAsRead, unreadCou
             >
               <Filter size={22} strokeWidth={1.5} />
             </button>}
-            {onMarkAllAsRead && unreadCount && unreadCount > 0 && (
+            {unreadCount && unreadCount > 0 && onMarkAllAsRead && (
               <button 
                 onClick={onMarkAllAsRead}
                 className="text-white bg-white/20 hover:bg-white/30 transition-colors px-4 py-2 rounded-xl text-sm font-light backdrop-blur-sm border border-white/30"

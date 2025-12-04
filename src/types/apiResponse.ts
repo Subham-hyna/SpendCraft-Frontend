@@ -116,3 +116,53 @@ export interface  FetchExpensesPayload {
   min_amount?: number;
   max_amount?: number;
 }
+
+export enum BudgetType {
+  OVERALL = 'overall',
+  PARTICULAR = 'particular',
+}
+
+export enum BudgetStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
+export interface Budget {
+  _id: string;
+  amount: number;
+  category_id?: Category;
+  type: BudgetType;
+  status: BudgetStatus;
+  period?: string;
+  user_id?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CategoryExpenseStat {
+  category: Category;
+  total_amount: number;
+  expense_count: number;
+  category_id: string;
+}
+
+export interface ExpenseStats {
+  start_date: string;
+  end_date: string;
+  total_amount: number;
+  total_expense_count: number;
+  categories: CategoryExpenseStat[];
+}
+
+export interface GetBudgetsResponse {
+  budgets: Budget[];
+  expenseStats: ExpenseStats;
+}
+
+export interface Notification {
+  _id: string;
+  label: string; // mapped from backend 'label'
+  description?: string;
+  redirect_uri?: string;
+  created_at: string;
+}

@@ -11,6 +11,8 @@ export const makeStore = () =>
       categories: slices.categorySlice,
       settings: slices.settingSlice,
       alerts: slices.alertSlice,  
+      budgets: slices.budgetSlice,
+      notifications: slices.notificationSlice,
     }
   });
 

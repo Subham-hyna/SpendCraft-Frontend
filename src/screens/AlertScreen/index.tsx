@@ -31,6 +31,12 @@ const AlertScreen = () => {
     const [thresholdAmount, setThresholdAmount] = useState(alert?.largeExpense?.thresholdAmount?.toString() ?? '');
     const [originalThresholdAmount, setOriginalThresholdAmount] = useState(alert?.largeExpense?.thresholdAmount?.toString() ?? '');
 
+    // Individual loading states for each section
+    const [budgetAlertsLoading, setBudgetAlertsLoading] = useState(false);
+    const [dailyReminderLoading, setDailyReminderLoading] = useState(false);
+    const [weeklyReportLoading, setWeeklyReportLoading] = useState(false);
+    const [largeExpenseLoading, setLargeExpenseLoading] = useState(false);
+
     // Sync local state with Redux store when alert data is loaded
     useEffect(() => {
         if (alert) {
@@ -55,11 +61,14 @@ const AlertScreen = () => {
     }, [alert]);
 
     // Update alert in backend
-    const handleUpdateAlert = async (updates: any) => {
+    const handleUpdateAlert = async (updates: any, setLoading?: (loading: boolean) => void) => {
+        if (setLoading) setLoading(true);
         try {
             await dispatch(updateAlert(updates)).unwrap();
         } catch (error) {
             console.error('Failed to update alert:', error);
+        } finally {
+            if (setLoading) setLoading(false);
         }
     };
 
@@ -78,7 +87,7 @@ const AlertScreen = () => {
                 enabled: newValue,
                 thresholds: sanitizeThresholds(thresholds)
             }
-        });
+        }, setBudgetAlertsLoading);
     };
 
     const handleThresholdToggle = (percentage: number, currentState: boolean, setState: React.Dispatch<React.SetStateAction<boolean>>) => {
@@ -101,7 +110,7 @@ const AlertScreen = () => {
                 enabled: budgetAlertsEnabled,
                 thresholds: sanitizeThresholds(updatedThresholds)
             }
-        });
+        }, setBudgetAlertsLoading);
     };
 
     // Handlers for other alerts
@@ -110,7 +119,7 @@ const AlertScreen = () => {
         setDailyReminderEnabled(newValue);
         handleUpdateAlert({
             dailyReminder: { enabled: newValue }
-        });
+        }, setDailyReminderLoading);
     };
 
     const handleWeeklyReportToggle = () => {
@@ -118,7 +127,7 @@ const AlertScreen = () => {
         setWeeklyReportEnabled(newValue);
         handleUpdateAlert({
             weeklyReport: { enabled: newValue }
-        });
+        }, setWeeklyReportLoading);
     };
 
     const handleLargeExpenseToggle = () => {
@@ -130,7 +139,7 @@ const AlertScreen = () => {
                 enabled: newValue,
                 thresholdAmount: currentThreshold
             }
-        });
+        }, setLargeExpenseLoading);
         // Update original value when toggling
         if (newValue) {
             setOriginalThresholdAmount(thresholdAmount);
@@ -147,7 +156,7 @@ const AlertScreen = () => {
                 enabled: true,
                 thresholdAmount: thresholdAmount ? parseFloat(thresholdAmount) : 0
             }
-        });
+        }, setLargeExpenseLoading);
         setOriginalThresholdAmount(thresholdAmount);
     };
 
@@ -173,32 +182,32 @@ const AlertScreen = () => {
                     toggleDescription="Get notified when you reach budget thresholds"
                     enabled={budgetAlertsEnabled}
                     onToggle={handleBudgetAlertsToggle}
-                    loading={update_alert_loading}
-                    disabled={update_alert_loading}
+                    loading={budgetAlertsLoading}
+                    disabled={budgetAlertsLoading}
                     checkboxes={budgetAlertsEnabled ? [
                         {
                             checked: alert50,
                             onToggle: () => handleThresholdToggle(50, alert50, setAlert50),
                             label: "Alert at 50% budget usage",
-                            disabled: update_alert_loading,
+                            disabled: budgetAlertsLoading,
                         },
                         {
                             checked: alert75,
                             onToggle: () => handleThresholdToggle(75, alert75, setAlert75),
                             label: "Alert at 75% budget usage",
-                            disabled: update_alert_loading,
+                            disabled: budgetAlertsLoading,
                         },
                         {
                             checked: alert90,
                             onToggle: () => handleThresholdToggle(90, alert90, setAlert90),
                             label: "Alert at 90% budget usage",
-                            disabled: update_alert_loading,
+                            disabled: budgetAlertsLoading,
                         },
                         {
                             checked: alertExceeded,
                             onToggle: () => handleThresholdToggle(100, alertExceeded, setAlertExceeded),
                             label: "Alert when budget exceeded",
-                            disabled: update_alert_loading,
+                            disabled: budgetAlertsLoading,
                         },
                     ] : undefined}
                 />
@@ -210,11 +219,11 @@ const AlertScreen = () => {
                     iconColor="indigo-600"
                     title="Daily Reminders"
                     toggleTitle="Daily Expense Reminder"
-                    toggleDescription="Remind me to log expenses at 8:00 PM"
+                    toggleDescription="Remind me to log expenses at 9:00 PM"
                     enabled={dailyReminderEnabled}
                     onToggle={handleDailyReminderToggle}
-                    loading={update_alert_loading}
-                    disabled={update_alert_loading}
+                    loading={dailyReminderLoading}
+                    disabled={dailyReminderLoading}
                 />
 
                 {/* Weekly Reports */}
@@ -227,8 +236,8 @@ const AlertScreen = () => {
                     toggleDescription="Get a summary every Sunday at 6:00 PM"
                     enabled={weeklyReportEnabled}
                     onToggle={handleWeeklyReportToggle}
-                    loading={update_alert_loading}
-                    disabled={update_alert_loading}
+                    loading={weeklyReportLoading}
+                    disabled={weeklyReportLoading}
                 />
 
                 {/* Large Expense Alerts */}
@@ -241,18 +250,18 @@ const AlertScreen = () => {
                     toggleDescription="Get notified for expenses above threshold"
                     enabled={largeExpenseEnabled}
                     onToggle={handleLargeExpenseToggle}
-                    loading={update_alert_loading}
-                    disabled={update_alert_loading}
+                    loading={largeExpenseLoading}
+                    disabled={largeExpenseLoading}
                     inputField={largeExpenseEnabled ? {
                         label: "Threshold Amount",
                         value: thresholdAmount,
                         onChange: handleThresholdAmountChange,
                         prefix: "₹",
                         type: "number",
-                        disabled: update_alert_loading,
+                        disabled: largeExpenseLoading,
                         showSaveButton: hasThresholdChanged,
                         onSave: handleSaveThresholdAmount,
-                        saveButtonLoading: update_alert_loading,
+                        saveButtonLoading: largeExpenseLoading,
                     } : undefined}
                 />
             </div>

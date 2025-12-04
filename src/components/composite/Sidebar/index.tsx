@@ -15,6 +15,7 @@ import { removeCookie } from '@/services/axiosInstance'
 const Sidebar = () => {
   const { isSidebarOpen: isOpen, closeSidebar: onClose } = useSidebar()
   const {user, logout_loading} = useAppSelector((state) => state.auth)
+  const { notifications } = useAppSelector((state) => state.notifications)
   const pathname = usePathname()
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -137,9 +138,9 @@ const Sidebar = () => {
                     </span>
                   </div>
                   <div className='flex items-center gap-2'>
-                    {item.badge && (
+                    {item.badge && notifications.length > 0 && (
                       <span className='bg-red-400 dark:bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full min-w-[24px] text-center'>
-                        {item.badge}
+                        {notifications.length}
                       </span>
                     )}
                     <ChevronRight 
