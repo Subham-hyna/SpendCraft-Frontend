@@ -28,7 +28,7 @@ const OverallBudgetCard: React.FC<OverallBudgetCardProps> = ({
   const [percentage, setPercentage] = useState<number>(0)
   const [remaining, setRemaining] = useState<number>(0)
   const [progressColor, setProgressColor] = useState<string>('bg-emerald-500')
-  const [textColor, setTextColor] = useState<string>('text-emerald-600')
+  const [textColor, setTextColor] = useState<string>('text-emerald-600 dark:text-emerald-400')
   const [statusText, setStatusText] = useState<string>('Good')
 
   // Helper function to calculate progress color based on percentage
@@ -41,10 +41,10 @@ const OverallBudgetCard: React.FC<OverallBudgetCardProps> = ({
 
   // Helper function to get text color based on percentage
   const getTextColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-red-600'
-    if (percentage >= 75) return 'text-orange-600'
-    if (percentage >= 50) return 'text-yellow-600'
-    return 'text-emerald-600'
+    if (percentage >= 90) return 'text-red-600 dark:text-red-400'
+    if (percentage >= 75) return 'text-orange-600 dark:text-orange-400'
+    if (percentage >= 50) return 'text-yellow-600 dark:text-yellow-400'
+    return 'text-emerald-600 dark:text-emerald-400'
   }
 
   // Get status text
@@ -76,11 +76,11 @@ const OverallBudgetCard: React.FC<OverallBudgetCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-100 p-6 mb-6 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-6 mb-6 shadow-sm">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-1">
-            <p className="text-sm text-gray-500 font-light">Overall Budget · Monthly</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-light">Overall Budget · Monthly</p>
             {budget && onToggle && (
               <button
                 onClick={onToggle}
@@ -103,10 +103,10 @@ const OverallBudgetCard: React.FC<OverallBudgetCardProps> = ({
               </button>
             )}
           </div>
-          <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-2">
+          <h2 className="text-4xl sm:text-5xl font-light text-gray-900 dark:text-gray-100 mb-2">
             {formatIndianCurrency(spent, false)}
           </h2>
-          <p className="text-sm text-gray-600 font-light">of {formatIndianCurrency(total, false)}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 font-light">of {formatIndianCurrency(total, false)}</p>
         </div>
         <div className="text-right">
           <p className={cn("text-3xl sm:text-4xl font-light mb-2", textColor)}>{percentage}%</p>

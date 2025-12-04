@@ -28,7 +28,7 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
   const [percentage, setPercentage] = useState<number>(0)
   const [remaining, setRemaining] = useState<number>(0)
   const [progressColor, setProgressColor] = useState<string>('bg-emerald-500')
-  const [textColor, setTextColor] = useState<string>('text-emerald-600')
+  const [textColor, setTextColor] = useState<string>('text-emerald-600 dark:text-emerald-400')
   // Helper function to calculate progress color based on percentage
   const getProgressColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-red-500'
@@ -39,10 +39,10 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
 
   // Helper function to get text color based on percentage
   const getTextColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-red-600'
-    if (percentage >= 75) return 'text-orange-600'
-    if (percentage >= 50) return 'text-yellow-600'
-    return 'text-emerald-600'
+    if (percentage >= 90) return 'text-red-600 dark:text-red-400'
+    if (percentage >= 75) return 'text-orange-600 dark:text-orange-400'
+    if (percentage >= 50) return 'text-yellow-600 dark:text-yellow-400'
+    return 'text-emerald-600 dark:text-emerald-400'
   }
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
   }
 
   return (
-    <div className="border border-gray-100 rounded-2xl p-4">
+    <div className="border border-gray-100 dark:border-gray-800 rounded-2xl p-4 dark:bg-gray-800/50">
       <div className="flex items-start gap-4 mb-3">
         <div 
           className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0"
@@ -75,7 +75,7 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
           <div className="flex items-start justify-between mb-1">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h4 className="text-base font-light text-gray-900">
+                <h4 className="text-base font-light text-gray-900 dark:text-gray-100">
                   {budget.category_id?.name || 'Unnamed Category'}
                 </h4>
                 {onToggle && (
@@ -100,7 +100,7 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
                   </button>
                 )}
               </div>
-              <p className="text-xs text-gray-500 font-light">
+              <p className="text-xs text-gray-500 dark:text-gray-400 font-light">
                 Monthly
               </p>
             </div>
@@ -117,8 +117,8 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
       </div>
 
       <div className="flex items-center justify-between mb-2">
-        <p className="text-lg font-light text-gray-900">{formatIndianCurrency(spent, false)}</p>
-        <p className="text-sm text-gray-500 font-light">/ {formatIndianCurrency(total, false)}</p>
+        <p className="text-lg font-light text-gray-900 dark:text-gray-100">{formatIndianCurrency(spent, false)}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 font-light">/ {formatIndianCurrency(total, false)}</p>
       </div>
 
       <div className="mb-2">
@@ -130,7 +130,7 @@ const CategoryBudgetCard: React.FC<CategoryBudgetCardProps> = ({
 
       <div className="flex items-center justify-between">
         <p className={cn("text-sm font-light", textColor)}>{percentage}%</p>
-        <p className="text-xs text-gray-500 font-light">{formatIndianCurrency(remaining, false)} left</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 font-light">{formatIndianCurrency(remaining, false)} left</p>
       </div>
     </div>
   )

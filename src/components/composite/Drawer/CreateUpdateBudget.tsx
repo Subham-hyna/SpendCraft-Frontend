@@ -1,7 +1,6 @@
 "use client"
-import { X } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/atomic/button'
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/atomic/drawer'
+import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/atomic/drawer'
 import { cn } from '@/lib/utils'
 import React, { useState, useEffect, useMemo } from 'react'
 import { Budget, Category, BudgetType } from '@/types/apiResponse'
@@ -162,17 +161,12 @@ const CreateUpdateBudget = ({ trigger, className, budget, onClose, open: control
         <Drawer open={open} onOpenChange={setOpen}>
             {trigger && <DrawerTrigger className={className}>{trigger}</DrawerTrigger>}
             <DrawerContent className="dark:bg-gray-800">
-                    <DrawerHeader className="sr-only">
-                        <div className="flex items-center justify-between">
-                            <DrawerTitle className="text-xl font-light text-gray-900 dark:text-gray-100">{isEditMode ? 'Edit Budget' : 'Create Budget'}</DrawerTitle>
-                        </div>
-                    </DrawerHeader>
-                <div className="p-6 space-y-6 overflow-y-auto flex-1">
-                    <div className={cn(
-                        "w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 overflow-hidden flex flex-col gap-4",
-                        isEditMode ? "max-h-[85vh]" : "h-[40vh]"
-                    )}>
-                        {/* Content */}
+                <DrawerHeader className="sr-only">
+                    <DrawerTitle>{isEditMode ? 'Edit Budget' : 'Create Budget'}</DrawerTitle>
+                </DrawerHeader>
+                <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 overflow-hidden flex flex-col max-h-[85vh]">
+                    {/* Content */}
+                    <div className="p-6 space-y-8 overflow-y-auto flex-1">
                         {/* Category Selection - Only for creating category budgets */}
                         {!isEditMode && !isOverallBudget && (
                             <div>
@@ -194,7 +188,7 @@ const CreateUpdateBudget = ({ trigger, className, budget, onClose, open: control
                         {/* Category Display - Only for editing category budgets (read-only) */}
                         {isEditMode && !isOverallBudget && budget?.category_id && (
                             <div>
-                                <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                                <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                                     Category
                                 </Label>
                                 <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
@@ -213,7 +207,7 @@ const CreateUpdateBudget = ({ trigger, className, budget, onClose, open: control
 
                         {/* Amount Input */}
                         <div>
-                            <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                            <Label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                                 Budget Amount {!isEditMode && '*'}
                             </Label>
                             <Input

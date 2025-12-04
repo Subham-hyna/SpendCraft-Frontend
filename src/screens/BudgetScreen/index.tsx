@@ -77,9 +77,9 @@ const BudgetScreen = () => {
           spent={overallSpent}
         />
 
-      <div className="bg-white rounded-3xl border border-gray-100 py-4 px-3 sm:p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800/50 rounded-3xl border border-gray-100 dark:border-gray-700 py-4 px-3 sm:p-6 shadow-sm">
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-xl font-light text-gray-900">Category Budgets</h3>
+          <h3 className="text-xl font-light text-gray-900 dark:text-gray-100">Category Budgets</h3>
           <button 
             onClick={() => {
               setSelectedBudget(null);
@@ -96,7 +96,7 @@ const BudgetScreen = () => {
           {fetch_budgets_loading && categoryBudgets.length === 0 ? (
             <CategoryBudgetCardSkeleton />
           ) : categoryBudgets.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 font-light">
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400 font-light">
               <p>No category budgets found</p>
             </div>
           ) : (
