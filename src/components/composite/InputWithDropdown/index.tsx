@@ -40,6 +40,8 @@ const InputWithDropdown = ({
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const categoryInputRef = useRef<HTMLInputElement>(null)
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   // Get selected category
   const selectedCategory = selectedCategoryId
@@ -73,12 +75,19 @@ const InputWithDropdown = ({
                            (target as Element).closest('[data-radix-drawer-content]') ||
                            (target as Element).closest('[data-radix-drawer-overlay]')
       
+      // Don't close if clicking on a button inside the dropdown (handled by onMouseDown)
+      const isButtonClick = (target as Element).closest('button') !== null
+      
       // Don't close if clicking inside the dropdown
       if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         // Only close if not clicking on a drawer/modal
         if (!drawerElement) {
           setIsOpen(false)
         }
+      } else if (isButtonClick && dropdownRef.current?.contains(target)) {
+        // If clicking a button inside dropdown, don't close immediately
+        // The button's onMouseDown handler will handle closing
+        return
       }
     }
 
@@ -95,23 +104,47 @@ const InputWithDropdown = ({
     }
   }, [isOpen])
 
-  const handleCategoryClick = (categoryId: string) => {
+  const handleCategoryClick = (categoryId: string, event?: React.MouseEvent) => {
+    event?.preventDefault()
+    event?.stopPropagation()
+    
+    // Clear search query first to prevent flicker
+    setSearchQuery('')
+    
     if (onCategorySelect) {
       onCategorySelect(categoryId)
     }
-    setIsOpen(false)
-    setSearchQuery('')
+    
+    // Close dropdown and refocus in the next frame for smooth transition
+    requestAnimationFrame(() => {
+      setIsOpen(false)
+      requestAnimationFrame(() => {
+        categoryInputRef.current?.focus()
+      })
+    })
   }
 
-  const handleSubcategoryClick = (subcategoryId: string) => {
+  const handleSubcategoryClick = (subcategoryId: string, event?: React.MouseEvent) => {
+    event?.preventDefault()
+    event?.stopPropagation()
+    
     const subcategory = subcategories.find((sub) => sub._id === subcategoryId)
     if (subcategory && onSubcategorySelect) {
       onSubcategorySelect(subcategoryId)
       // Optionally set the title to subcategory name
       onChange(subcategory.name)
     }
-    setIsOpen(false)
+    
+    // Clear search query first to prevent flicker
     setSearchQuery('')
+    
+    // Close dropdown and refocus in the next frame for smooth transition
+    requestAnimationFrame(() => {
+      setIsOpen(false)
+      requestAnimationFrame(() => {
+        titleInputRef.current?.focus()
+      })
+    })
   }
 
   // Reset search when dropdown closes
@@ -143,6 +176,7 @@ const InputWithDropdown = ({
               </div>
             )}
             <Input
+              ref={categoryInputRef}
               type="text"
               value={isOpen ? searchQuery : (selectedCategory?.name || '')}
               onChange={(e) => {
@@ -156,6 +190,19 @@ const InputWithDropdown = ({
                 if (selectedCategory) {
                   setSearchQuery('')
                 }
+              }}
+              onBlur={(e) => {
+                // Don't close dropdown if clicking inside the dropdown
+                const relatedTarget = e.relatedTarget as Node | null
+                if (relatedTarget && dropdownRef.current?.contains(relatedTarget)) {
+                  return
+                }
+                // Small delay to allow dropdown item clicks to process
+                setTimeout(() => {
+                  if (!dropdownRef.current?.contains(document.activeElement)) {
+                    setIsOpen(false)
+                  }
+                }, 150)
               }}
               placeholder={placeholder || 'Search or select category...'}
               style={{ borderRadius: '8px' }}
@@ -223,7 +270,10 @@ const InputWithDropdown = ({
                         <button
                           key={category._id}
                           type="button"
-                          onClick={() => handleCategoryClick(category._id)}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            handleCategoryClick(category._id, e)
+                          }}
                           className={cn(
                             "w-full text-left px-4 py-3 rounded-lg text-sm transition-colors font-light flex items-center justify-between gap-3",
                             selectedCategoryId === category._id
@@ -306,6 +356,7 @@ const InputWithDropdown = ({
       {/* Text Input */}
       <div className="relative">
         <Input
+          ref={titleInputRef}
           type="text"
           value={value}
           onChange={(e) => {
@@ -339,7 +390,10 @@ const InputWithDropdown = ({
               <button
                 key={subcategory._id}
                 type="button"
-                onClick={() => handleSubcategoryClick(subcategory._id)}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  handleSubcategoryClick(subcategory._id, e)
+                }}
                 className="w-full text-left px-4 py-2 rounded-lg text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-light"
               >
                 {subcategory.name}
