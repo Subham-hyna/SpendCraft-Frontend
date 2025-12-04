@@ -78,7 +78,7 @@ const BudgetScreen = () => {
         />
 
       <div className="bg-white dark:bg-gray-800/50 rounded-3xl border border-gray-100 dark:border-gray-700 py-4 px-3 sm:p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-5">
+        {!fetch_budgets_loading && <div className="flex items-center justify-between mb-5">
           <h3 className="text-xl font-light text-gray-900 dark:text-gray-100">Category Budgets</h3>
           <button 
             onClick={() => {
@@ -90,7 +90,7 @@ const BudgetScreen = () => {
             <Plus size={16} strokeWidth={1.5} />
             Add Category
           </button>
-        </div>
+        </div>}
 
         <div className="space-y-4">
           {fetch_budgets_loading && categoryBudgets.length === 0 ? (
