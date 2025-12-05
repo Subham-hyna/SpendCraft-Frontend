@@ -1,5 +1,5 @@
 import axiosInstance from '@/services/axiosInstance';
-import { Expense, FetchExpensesPayload, FetchExpensesResponse } from '@/types/apiResponse';
+import { Expense, FetchExpensesPayload, FetchExpensesResponse, MonthlyExpensesResponse } from '@/types/apiResponse';
 
 export const prefix = 'expense';
 
@@ -32,7 +32,12 @@ export const expenseService = {
   },
 
   userQuery: async (query: string): Promise<Expense> => {
-    const response = await axiosInstance.post(`/${prefix}/user-query`, { query });
+    const response = await axiosInstance.post(`/${prefix}/user-query`, { query }, {timeout: 90000000});
+    return response.data;
+  },
+
+  getMonthlyExpenses: async (payload: any): Promise<MonthlyExpensesResponse> => {
+    const response = await axiosInstance.get(`/${prefix}/monthly-expenses`, { params: payload });
     return response.data;
   }
 };

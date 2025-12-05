@@ -57,7 +57,7 @@ const HeaderCard = ({ thisMonthSpending, budgetLeft, headerLoading, onAddExpense
       </div>
 
       {/* Voice Input */}
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 flex items-center gap-3 shadow-sm">
         <input
           type="text"
           placeholder="Say what you spent... 'Coffee ₹150'"
@@ -65,9 +65,9 @@ const HeaderCard = ({ thisMonthSpending, budgetLeft, headerLoading, onAddExpense
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors p-2">
+        {/* <button className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors p-2">
           <Mic size={20} strokeWidth={1.5} />
-        </button>
+        </button> */}
       </div>
 
       {/* Add Expense Button */}
@@ -76,7 +76,7 @@ const HeaderCard = ({ thisMonthSpending, budgetLeft, headerLoading, onAddExpense
         className="w-full bg-indigo-500 dark:bg-indigo-600 text-white rounded-2xl py-4 flex items-center justify-center gap-2 hover:bg-indigo-600 dark:hover:bg-indigo-700 transition-all shadow-sm font-light"
         disabled={user_query_loading}
       >
-        {user_query_loading ? <><Spinner width={20} height={20} /> Adding...</>: (
+        {user_query_loading ? <><Spinner width={20} height={20} /> ANALYZING...</>: (
           <>
             <Plus size={20} strokeWidth={1.5} />
             Add Expense

@@ -40,3 +40,8 @@ export const userQuery = createAsyncThunk('expenses/userQuery', async (query: st
   const response = await expenseService.userQuery(query);
   return response;
 });
+
+export const getMonthlyExpenses = createAsyncThunk('expenses/getMonthlyExpenses', async (payload: any) => {
+  const response = await expenseService.getMonthlyExpenses(payload);
+  return response;
+});

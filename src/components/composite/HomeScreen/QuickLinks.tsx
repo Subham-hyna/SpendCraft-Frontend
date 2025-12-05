@@ -7,10 +7,10 @@ const QuickLinks = () => {
   const router = useRouter()
   
   const quickActions = [
-    { id: 1, name: 'Analytics', icon: <BarChart3 size={20} strokeWidth={1.5} />, color: '#F3E8FF', path: '/report' },
-    { id: 2, name: 'All Expenses', icon: <FileText size={20} strokeWidth={1.5} />, color: '#E8F1FF', path: '/expense' },
-    { id: 3, name: 'Budgets', icon: <Wallet size={20} strokeWidth={1.5} />, color: '#DCFCE7', path: '/budget' },
-    { id: 4, name: 'Export', icon: <Download size={20} strokeWidth={1.5} />, color: '#FEF3E2', path: '/export' }
+    { id: 1, name: 'Analytics', icon: <BarChart3 size={20} strokeWidth={1.5} className='text-gray-600' />, color: '#F3E8FF', path: '/report' },
+    { id: 2, name: 'All Expenses', icon: <FileText size={20} strokeWidth={1.5} className='text-gray-600' />, color: '#E8F1FF', path: '/expense' },
+    { id: 3, name: 'Budgets', icon: <Wallet size={20} strokeWidth={1.5} className='text-gray-600' />, color: '#DCFCE7', path: '/budget' },
+    { id: 4, name: 'Export', icon: <Download size={20} strokeWidth={1.5} className='text-gray-600' />, color: '#FEF3E2', path: '/export' }
   ]
 
   return (

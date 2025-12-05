@@ -166,3 +166,23 @@ export interface Notification {
   redirect_uri?: string;
   created_at: string;
 }
+
+export interface FrequencyData {
+  period: string;
+  expenses: Expense[];
+}
+
+export interface FrencyDataResponse {
+  frequency: string;
+  start_date: string;
+  end_date: string;
+  total_amount: number;
+  total_expense_count: number;
+  average_expense_amount: number;
+  data: FrequencyData[];
+}
+
+export interface MonthlyExpensesResponse {
+  expenseData: FrencyDataResponse;
+  categoryData: ExpenseStats;
+}

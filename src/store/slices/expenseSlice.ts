@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery } from "@/store/thunks";
-import { Expense, Pagination } from "@/types/apiResponse";
+import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery, getMonthlyExpenses } from "@/store/thunks";
+import { Expense, MonthlyExpensesResponse, Pagination } from "@/types/apiResponse";
 interface ExpenseState {
   expenses: Expense[];
   fetch_expenses_loading: boolean;
@@ -11,6 +11,8 @@ interface ExpenseState {
   create_update_expense_loading: boolean;
   user_query_loading: boolean;
   user_query_expense: Expense | null;
+  monthly_expenses_loading: boolean;
+  monthly_expenses: MonthlyExpensesResponse | null;
 }
 
 const initialState: ExpenseState = {
@@ -23,6 +25,8 @@ const initialState: ExpenseState = {
   create_update_expense_loading: false,
   user_query_loading: false,
   user_query_expense: null,
+  monthly_expenses_loading: false,
+  monthly_expenses: null,
 };
 
 const expenseSlice = createSlice({
@@ -117,6 +121,18 @@ const expenseSlice = createSlice({
         })
         .addCase(userQuery.rejected, (state) => {
           state.user_query_loading = false;
+        })
+
+        // Get Monthly Expenses
+        .addCase(getMonthlyExpenses.pending, (state) => {
+          state.monthly_expenses_loading = true;
+        })
+        .addCase(getMonthlyExpenses.fulfilled, (state, action) => {
+          state.monthly_expenses_loading = false;
+          state.monthly_expenses = action.payload;
+        })
+        .addCase(getMonthlyExpenses.rejected, (state) => {
+          state.monthly_expenses_loading = false;
         })
     },
   });
