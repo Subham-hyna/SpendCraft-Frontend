@@ -227,7 +227,7 @@ const AlertScreen = () => {
                 />
 
                 {/* Weekly Reports */}
-                <AlertSection
+                {/* <AlertSection
                     icon={BarChart3}
                     iconBgColor="purple"
                     iconColor="purple-600"
@@ -238,7 +238,7 @@ const AlertScreen = () => {
                     onToggle={handleWeeklyReportToggle}
                     loading={weeklyReportLoading}
                     disabled={weeklyReportLoading}
-                />
+                /> */}
 
                 {/* Large Expense Alerts */}
                 <AlertSection

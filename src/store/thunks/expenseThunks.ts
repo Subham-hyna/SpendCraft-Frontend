@@ -45,3 +45,8 @@ export const getMonthlyExpenses = createAsyncThunk('expenses/getMonthlyExpenses'
   const response = await expenseService.getMonthlyExpenses(payload);
   return response;
 });
+
+export const getRangeExpenses = createAsyncThunk('expenses/getRangeExpenses', async (payload: any) => {
+  const response = await expenseService.getRangeExpenses(payload);
+  return response;
+});

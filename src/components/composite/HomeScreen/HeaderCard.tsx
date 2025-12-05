@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { TrendingUp, FileText, Mic, Plus } from 'lucide-react'
+import { TrendingUp, FileText, Sparkles } from 'lucide-react'
 import { formatIndianCurrency } from '@/lib/currencyFormat'
 import { useAppSelector } from '@/store'
 import { Spinner } from '@/components/atomic/spinner'
@@ -74,12 +74,12 @@ const HeaderCard = ({ thisMonthSpending, budgetLeft, headerLoading, onAddExpense
       <button 
         onClick={handleUserQuery} 
         className="w-full bg-indigo-500 dark:bg-indigo-600 text-white rounded-2xl py-4 flex items-center justify-center gap-2 hover:bg-indigo-600 dark:hover:bg-indigo-700 transition-all shadow-sm font-light"
-        disabled={user_query_loading}
+        disabled={query.trim() === '' || user_query_loading}
       >
         {user_query_loading ? <><Spinner width={20} height={20} /> ANALYZING...</>: (
           <>
-            <Plus size={20} strokeWidth={1.5} />
-            Add Expense
+            <Sparkles size={20} strokeWidth={1.5} />
+            Add Expense with AI
           </>
         )}
       </button>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery, getMonthlyExpenses } from "@/store/thunks";
-import { Expense, MonthlyExpensesResponse, Pagination } from "@/types/apiResponse";
+import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery, getMonthlyExpenses, getRangeExpenses } from "@/store/thunks";
+import { Expense, FrencyDataResponse, MonthlyExpensesResponse, Pagination } from "@/types/apiResponse";
 interface ExpenseState {
   expenses: Expense[];
   fetch_expenses_loading: boolean;
@@ -13,6 +13,8 @@ interface ExpenseState {
   user_query_expense: Expense | null;
   monthly_expenses_loading: boolean;
   monthly_expenses: MonthlyExpensesResponse | null;
+  range_expenses_loading: boolean;
+  range_expenses: FrencyDataResponse | null;
 }
 
 const initialState: ExpenseState = {
@@ -27,6 +29,8 @@ const initialState: ExpenseState = {
   user_query_expense: null,
   monthly_expenses_loading: false,
   monthly_expenses: null,
+  range_expenses_loading: false,
+  range_expenses: null,
 };
 
 const expenseSlice = createSlice({
@@ -133,6 +137,18 @@ const expenseSlice = createSlice({
         })
         .addCase(getMonthlyExpenses.rejected, (state) => {
           state.monthly_expenses_loading = false;
+        })
+
+        // Get Range Expenses
+        .addCase(getRangeExpenses.pending, (state) => {
+          state.range_expenses_loading = true;
+        })
+        .addCase(getRangeExpenses.fulfilled, (state, action) => {
+          state.range_expenses_loading = false;
+          state.range_expenses = action.payload;
+        })
+        .addCase(getRangeExpenses.rejected, (state) => {
+          state.range_expenses_loading = false;
         })
     },
   });

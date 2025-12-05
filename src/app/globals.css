@@ -120,3 +120,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes meteor {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(800px) translateX(600px);
+    opacity: 0;
+  }
+}
+
+.animate-meteor {
+  animation: meteor linear infinite;
+}

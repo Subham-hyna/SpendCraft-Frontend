@@ -170,6 +170,8 @@ export interface Notification {
 export interface FrequencyData {
   period: string;
   expenses: Expense[];
+  total_amount: number;
+  expense_count: number;
 }
 
 export interface FrencyDataResponse {

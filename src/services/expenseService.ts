@@ -1,5 +1,5 @@
 import axiosInstance from '@/services/axiosInstance';
-import { Expense, FetchExpensesPayload, FetchExpensesResponse, MonthlyExpensesResponse } from '@/types/apiResponse';
+import { Expense, FetchExpensesPayload, FetchExpensesResponse, FrencyDataResponse, MonthlyExpensesResponse } from '@/types/apiResponse';
 
 export const prefix = 'expense';
 
@@ -39,5 +39,10 @@ export const expenseService = {
   getMonthlyExpenses: async (payload: any): Promise<MonthlyExpensesResponse> => {
     const response = await axiosInstance.get(`/${prefix}/monthly-expenses`, { params: payload });
     return response.data;
-  }
+  },
+
+  getRangeExpenses: async (payload: any): Promise<FrencyDataResponse> => {
+    const response = await axiosInstance.get(`/${prefix}/frequency`, { params: payload });
+    return response.data;
+  },
 };

@@ -11,7 +11,7 @@ export default function AuthLoader({ children }: { children: React.ReactNode }) 
   const { is_authenticated, fetch_user_loading: loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (pathname !== '/login') {
+    if (pathname !== '/login' && pathname !== '/') {
       dispatch(fetchUser());
     }
   }, []);

@@ -9,8 +9,9 @@ import { Spinner } from '@/components/atomic/spinner';
 import Image from 'next/image';
 import googleIcon from '@/assets/icons/google.svg';
 import logo from '@/assets/icons/logo.png';
-import { ChartBar, CheckCircle2, TrendingUp } from 'lucide-react';
+import { ChartBar, CheckCircle2, TrendingUp, ArrowLeft } from 'lucide-react';
 import { FeaturesList, Feature } from '@/components/composite/login/FeaturesList';
+import { BackgroundPaths } from '@/components/atomic/background-paths';
 import toast from 'react-hot-toast';
 
 const LoginPage = () => {
@@ -66,11 +67,28 @@ const LoginPage = () => {
     flow: 'auth-code',
   });
 
+  const handleBackToHome = () => {
+    router.push('/');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300 relative">
+      {/* Background Paths */}
+      <BackgroundPaths />
+
       {/* Login Card */}
-      <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/20 p-8 transition-colors duration-300">
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white/80 dark:bg-slate-900/60 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/20 p-8 transition-colors duration-300 relative">
+          {/* Back to Home Button */}
+          <button
+            onClick={handleBackToHome}
+            className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200"
+            aria-label="Back to home"
+          >
+            <ArrowLeft size={16} className="text-gray-700 dark:text-gray-300" />
+            <span className="text-xs font-light text-gray-700 dark:text-gray-300">Back</span>
+          </button>
+
           {/* Logo and App Name */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-8">

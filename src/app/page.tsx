@@ -1,18 +1,19 @@
-"use client"
 import React from 'react'
-import { useRouter } from 'next/navigation';
+import { Metadata } from 'next';
+import LandingScreen from '@/screens/LandingScreen';
 
-const SettingScreen = () => {
-  const router = useRouter();
-  // Avoid hydration mismatch by only rendering after mount
-  React.useEffect(() => {
-    router.push('/login');
-  }, []);
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
+export const metadata: Metadata = {
+  title: "SpendCraft",
+  description: "Your personal finance assistant",
+};
+
+const LandingPage = () => {
   return (
-      <div className="p-6">
-      </div>
+    <LandingScreen />
   )
 }
 
-export default SettingScreen
+export default LandingPage  

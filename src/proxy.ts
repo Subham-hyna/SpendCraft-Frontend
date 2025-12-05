@@ -7,6 +7,7 @@ export function proxy(request: NextRequest) {
 
   const publicRoutes = [
     '/login',
+    '/'
 ];
   const isPublicRoute = publicRoutes.includes(pathname);
 
