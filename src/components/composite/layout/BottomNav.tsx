@@ -10,7 +10,7 @@ const BottomNavigation = () => {
   const [open, setOpen] = useState(false);
   const navItems = [
     { id: 'home', label: 'Home', icon: Home, path: '/home' },
-    { id: 'stats', label: 'Stats', icon: BarChart3, path: '/stat' },
+    { id: 'stats', label: 'Stats', icon: BarChart3, path: '/report' },
     { id: 'add', label: 'Add', icon: Plus, isCenter: true, onClick: () => setOpen(true) },
     { id: 'calendar', label: 'Calendar', icon: Calendar, path: '/calendar' },
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },

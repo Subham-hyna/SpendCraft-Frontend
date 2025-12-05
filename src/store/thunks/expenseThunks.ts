@@ -33,4 +33,10 @@ export const updateExpense = createAsyncThunk('expenses/update', async (payload:
   } catch (error: any) {
     return rejectWithValue(error);
   }
+  
+});
+
+export const userQuery = createAsyncThunk('expenses/userQuery', async (query: string) => {
+  const response = await expenseService.userQuery(query);
+  return response;
 });

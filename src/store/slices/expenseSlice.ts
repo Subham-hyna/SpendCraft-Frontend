@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense } from "@/store/thunks";
+import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery } from "@/store/thunks";
 import { Expense, Pagination } from "@/types/apiResponse";
 interface ExpenseState {
   expenses: Expense[];
@@ -9,6 +9,8 @@ interface ExpenseState {
   delete_expense_loading: boolean;
   expense: Expense | null;
   create_update_expense_loading: boolean;
+  user_query_loading: boolean;
+  user_query_expense: Expense | null;
 }
 
 const initialState: ExpenseState = {
@@ -19,6 +21,8 @@ const initialState: ExpenseState = {
   delete_expense_loading: false,
   expense: null,
   create_update_expense_loading: false,
+  user_query_loading: false,
+  user_query_expense: null,
 };
 
 const expenseSlice = createSlice({
@@ -32,6 +36,10 @@ const expenseSlice = createSlice({
 
       resetExpenseById: (state) => {
         state.expense = null;
+      },
+
+      resetUserQuery: (state) => {
+        state.user_query_expense = null;
       },
     },
     extraReducers: (builder) => {
@@ -98,9 +106,21 @@ const expenseSlice = createSlice({
         .addCase(updateExpense.rejected, (state) => {
           state.create_update_expense_loading = false;
         })
+
+        // User Query
+        .addCase(userQuery.pending, (state) => {
+          state.user_query_loading = true;
+        })
+        .addCase(userQuery.fulfilled, (state, action) => {
+          state.user_query_expense = action.payload;
+          state.user_query_loading = false;
+        })
+        .addCase(userQuery.rejected, (state) => {
+          state.user_query_loading = false;
+        })
     },
   });
   
-  export const { resetExpenses, resetExpenseById } = expenseSlice.actions;
+  export const { resetExpenses, resetExpenseById, resetUserQuery } = expenseSlice.actions;
   export default expenseSlice.reducer;
   

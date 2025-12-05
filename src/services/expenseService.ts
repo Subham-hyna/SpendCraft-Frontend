@@ -29,5 +29,10 @@ export const expenseService = {
   update: async (id: string, payload: any) => {
     const response = await axiosInstance.patch(`/${prefix}/${id}`, payload);
     return response.data;
+  },
+
+  userQuery: async (query: string): Promise<Expense> => {
+    const response = await axiosInstance.post(`/${prefix}/user-query`, { query });
+    return response.data;
   }
 };
