@@ -15,7 +15,8 @@ import { formatIndianCurrency } from '@/lib/currencyFormat';
 interface DateExpensesDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedDate: Dayjs | null;
+  selectedDate?: Dayjs | null;
+  selectedCategoryName?: string | null;
   expenses: Expense[];
   onExpenseClick: (expense: Expense) => void;
 }
@@ -24,6 +25,7 @@ const DateExpensesDrawer: React.FC<DateExpensesDrawerProps> = ({
   open,
   onOpenChange,
   selectedDate,
+  selectedCategoryName,
   expenses,
   onExpenseClick
 }) => {
@@ -37,6 +39,23 @@ const DateExpensesDrawer: React.FC<DateExpensesDrawerProps> = ({
   };
 
   const totalAmount = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+  const getTitle = () => {
+    if (selectedCategoryName) {
+      return selectedCategoryName;
+    }
+    if (selectedDate) {
+      return formatDate(selectedDate);
+    }
+    return 'Expenses';
+  };
+
+  const getEmptyMessage = () => {
+    if (selectedCategoryName) {
+      return 'No expenses found for this category';
+    }
+    return 'No expenses found for this date';
+  };
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -52,7 +71,7 @@ const DateExpensesDrawer: React.FC<DateExpensesDrawerProps> = ({
               </button>
               <div className="flex flex-col gap-1 justify-start items-start">
                 <DrawerTitle className="text-xl font-light text-gray-900 dark:text-gray-100">
-                  {selectedDate ? formatDate(selectedDate) : 'Expenses'}
+                  {getTitle()}
                 </DrawerTitle>
                 {expenses.length > 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 font-light mt-1">
@@ -76,7 +95,7 @@ const DateExpensesDrawer: React.FC<DateExpensesDrawerProps> = ({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-20">
-              <p className="text-gray-500 dark:text-gray-400 font-light">No expenses found for this date</p>
+              <p className="text-gray-500 dark:text-gray-400 font-light">{getEmptyMessage()}</p>
             </div>
           )}
         </div>

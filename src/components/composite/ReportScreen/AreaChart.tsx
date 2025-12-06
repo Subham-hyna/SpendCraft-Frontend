@@ -17,9 +17,10 @@ interface ChartDataItem {
 interface AreaChartProps {
   chartData: ChartDataItem[]
   frequency?: string
+  onPeriodClick?: (item: ChartDataItem) => void
 }
 
-const AreaChart: React.FC<AreaChartProps> = ({ chartData, frequency }) => {
+const AreaChart: React.FC<AreaChartProps> = ({ chartData, frequency, onPeriodClick }) => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-6">
@@ -113,7 +114,8 @@ const AreaChart: React.FC<AreaChartProps> = ({ chartData, frequency }) => {
           return (
             <div
               key={index}
-              className={`flex items-center justify-between py-4 px-3 border-b border-gray-100 dark:border-gray-700/50 last:border-0`}
+              onClick={() => onPeriodClick?.(item)}
+              className={`flex items-center justify-between py-4 px-3 border-b border-gray-100 dark:border-gray-700/50 last:border-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors rounded-lg`}
             >
               <div className="flex flex-col">
                 <span className="text-sm text-gray-600 dark:text-gray-400 font-light">{item.displayPeriod}</span>

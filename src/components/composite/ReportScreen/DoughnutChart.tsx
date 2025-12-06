@@ -12,14 +12,16 @@ interface CategoryData {
   color: string
   chartColor: string
   icon: string
+  categoryId?: string
 }
 
 interface DoughnutChartProps {
   categoryChartData: CategoryData[]
   totalAmount: number
+  onCategoryClick?: (category: CategoryData) => void
 }
 
-const DoughnutChart: React.FC<DoughnutChartProps> = ({ categoryChartData, totalAmount }) => {
+const DoughnutChart: React.FC<DoughnutChartProps> = ({ categoryChartData, totalAmount, onCategoryClick }) => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-6">
@@ -64,7 +66,11 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ categoryChartData, totalA
       {/* Category List */}
       <div className="space-y-4">
         {categoryChartData.map((category, index) => (
-          <div key={index} className="flex items-center gap-3">
+          <div 
+            key={index} 
+            onClick={() => onCategoryClick?.(category)}
+            className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors rounded-lg p-2 -m-2"
+          >
             <div 
               className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
               style={{ backgroundColor: category.color }}

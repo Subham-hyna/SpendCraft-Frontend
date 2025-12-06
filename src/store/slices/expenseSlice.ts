@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery, getMonthlyExpenses, getRangeExpenses } from "@/store/thunks";
-import { Expense, FrencyDataResponse, MonthlyExpensesResponse, Pagination } from "@/types/apiResponse";
+import { fetchExpenses, createExpense, deleteExpense, getExpenseById, updateExpense, userQuery, getMonthlyExpenses, getRangeExpensesByCategory, getRangeExpensesByFrequency } from "@/store/thunks";
+import { CategoryDataResponse, Expense, FrequencyDataResponse, MonthlyExpensesResponse, Pagination } from "@/types/apiResponse";
 interface ExpenseState {
   expenses: Expense[];
   fetch_expenses_loading: boolean;
@@ -13,8 +13,10 @@ interface ExpenseState {
   user_query_expense: Expense | null;
   monthly_expenses_loading: boolean;
   monthly_expenses: MonthlyExpensesResponse | null;
-  range_expenses_loading: boolean;
-  range_expenses: FrencyDataResponse | null;
+  range_expenses_by_frequency_loading: boolean;
+  range_expenses_by_frequency: FrequencyDataResponse | null;
+  range_expenses_by_category_loading: boolean;
+  range_expenses_by_category: CategoryDataResponse | null;
 }
 
 const initialState: ExpenseState = {
@@ -29,8 +31,10 @@ const initialState: ExpenseState = {
   user_query_expense: null,
   monthly_expenses_loading: false,
   monthly_expenses: null,
-  range_expenses_loading: false,
-  range_expenses: null,
+  range_expenses_by_frequency_loading: false,
+  range_expenses_by_category_loading: false,
+  range_expenses_by_frequency: null,
+  range_expenses_by_category: null,
 };
 
 const expenseSlice = createSlice({
@@ -140,15 +144,27 @@ const expenseSlice = createSlice({
         })
 
         // Get Range Expenses
-        .addCase(getRangeExpenses.pending, (state) => {
-          state.range_expenses_loading = true;
+        .addCase(getRangeExpensesByFrequency.pending, (state) => {
+          state.range_expenses_by_frequency_loading = true;
         })
-        .addCase(getRangeExpenses.fulfilled, (state, action) => {
-          state.range_expenses_loading = false;
-          state.range_expenses = action.payload;
+        .addCase(getRangeExpensesByFrequency.fulfilled, (state, action) => {
+          state.range_expenses_by_frequency_loading = false;
+          state.range_expenses_by_frequency = action.payload;
         })
-        .addCase(getRangeExpenses.rejected, (state) => {
-          state.range_expenses_loading = false;
+        .addCase(getRangeExpensesByFrequency.rejected, (state) => {
+          state.range_expenses_by_frequency_loading = false;
+        })
+
+        // Get Range Expenses By Category
+        .addCase(getRangeExpensesByCategory.pending, (state) => {
+          state.range_expenses_by_category_loading = true;
+        })
+        .addCase(getRangeExpensesByCategory.fulfilled, (state, action) => {
+          state.range_expenses_by_category_loading = false;
+          state.range_expenses_by_category = action.payload;
+        })
+        .addCase(getRangeExpensesByCategory.rejected, (state) => {  
+          state.range_expenses_by_category_loading = false;
         })
     },
   });

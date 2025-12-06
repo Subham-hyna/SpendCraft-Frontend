@@ -174,7 +174,7 @@ export interface FrequencyData {
   expense_count: number;
 }
 
-export interface FrencyDataResponse {
+export interface FrequencyDataResponse {
   frequency: string;
   start_date: string;
   end_date: string;
@@ -185,6 +185,23 @@ export interface FrencyDataResponse {
 }
 
 export interface MonthlyExpensesResponse {
-  expenseData: FrencyDataResponse;
+  expenseData: FrequencyDataResponse;
   categoryData: ExpenseStats;
+}
+
+export interface CategoryDataResponse {
+  start_date: string;
+  end_date: string;
+  total_amount: number;
+  total_expense_count: number;
+  average_expense_amount: number;
+  data: CategoryData[];
+}
+
+export interface CategoryData {
+  category: Category;
+  total_amount: number;
+  expense_count: number;
+  category_id: string;
+  expenses: Expense[];
 }

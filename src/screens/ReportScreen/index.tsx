@@ -4,8 +4,8 @@ import Layout from '@/components/composite/layout'
 import Header2 from '@/components/composite/Header2/Header2'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getDayjsInUserTimezone, getUserTimezone, toISOUTC } from '@/lib/dateUtils'
-import { getMonthlyExpenses, getRangeExpenses } from '@/store/thunks'
-import dayjs from 'dayjs'
+import { getMonthlyExpenses, getRangeExpensesByCategory, getRangeExpensesByFrequency, deleteExpense } from '@/store/thunks'
+import dayjs, { Dayjs } from 'dayjs'
 import isoWeek from 'dayjs/plugin/isoWeek'
 import { formatIndianCurrency } from '@/lib/currencyFormat'
 import AreaChartSkeleton from '@/components/composite/Skeleton/AreaChartSkeleton'
@@ -13,6 +13,11 @@ import DoughnutChartSkeleton from '@/components/composite/Skeleton/DoughnutChart
 import AreaChart from '@/components/composite/ReportScreen/AreaChart'
 import DoughnutChart from '@/components/composite/ReportScreen/DoughnutChart'
 import FrequencyDropdown from '@/components/composite/ReportScreen/FrequencyDropdown'
+import DateExpensesDrawer from '@/components/composite/Drawer/DateExpensesDrawer'
+import ViewExpense from '@/components/composite/Drawer/ViewExpense'
+import CreateUpdateExpense from '@/components/composite/Drawer/CreateUpdateExpense'
+import { AlertDialogComponent } from '@/components/composite/AlertDialog'
+import { Expense } from '@/types/apiResponse'
 
 dayjs.extend(isoWeek)
 
@@ -93,9 +98,23 @@ const ReportScreen = () => {
 
  const dispatch = useAppDispatch()
 
- const { range_expenses, range_expenses_loading, monthly_expenses, monthly_expenses_loading, create_update_expense_loading } = useAppSelector((state) => state.expenses)
+ const { range_expenses_by_frequency, range_expenses_by_frequency_loading, range_expenses_by_category, range_expenses_by_category_loading, create_update_expense_loading, delete_expense_loading } = useAppSelector((state) => state.expenses)
 
  const [selectedRange, setSelectedRange] = useState<string>('day')
+ 
+ // Drawer states
+ const [expensesDrawerOpen, setExpensesDrawerOpen] = useState<boolean>(false)
+ const [viewExpenseDrawerOpen, setViewExpenseDrawerOpen] = useState<boolean>(false)
+ const [editExpenseDrawerOpen, setEditExpenseDrawerOpen] = useState<boolean>(false)
+ const [deleteExpenseDrawerOpen, setDeleteExpenseDrawerOpen] = useState<boolean>(false)
+ 
+ // Selected data states
+ const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
+ const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null)
+ const [drawerExpenses, setDrawerExpenses] = useState<Expense[]>([])
+ const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null)
+ const [selectedExpenseData, setSelectedExpenseData] = useState<Expense | null>(null)
+ const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null)
 
  const frequencyOptions = [
    { value: 'day', label: 'Day' },
@@ -135,7 +154,7 @@ const ReportScreen = () => {
     }
 
     await Promise.all([
-        dispatch(getRangeExpenses(
+        dispatch(getRangeExpensesByFrequency(
             {
                 start_date: toISOUTC(startDate.toDate()),
                 end_date: toISOUTC(endDate.toDate()),
@@ -143,11 +162,14 @@ const ReportScreen = () => {
                 frequency: selectedRange,
             }
         )),
-        dispatch(getMonthlyExpenses({
-            start_date: toISOUTC(startOfMonth.toDate()),
-            end_date: toISOUTC(endOfMonth.toDate()),
-            timezone: getUserTimezone()
-          }))
+        dispatch(getRangeExpensesByCategory(
+            {
+                start_date: toISOUTC(startDate.toDate()),
+                end_date: toISOUTC(endDate.toDate()),
+                frequency: selectedRange,
+                timezone: timezone,
+            }
+        ))
     ])
  }
 
@@ -155,22 +177,129 @@ const ReportScreen = () => {
     fetchData();
  }, [selectedRange, create_update_expense_loading]);
 
+ // Handle period click from AreaChart
+ const handlePeriodClick = (item: any) => {
+   // Find the period data from range_expenses_by_frequency
+   const periodData = range_expenses_by_frequency?.data?.find(
+     (period) => period.period === item.periodRaw
+   );
+
+   if (!periodData) {
+     return;
+   }
+
+   setSelectedDate(null);
+   setSelectedCategoryName(null);
+   setDrawerExpenses(periodData.expenses || []);
+   setExpensesDrawerOpen(true);
+ };
+
+ // Handle category click from DoughnutChart
+ const handleCategoryClick = (category: any) => {
+   // Find the category data from range_expenses_by_category
+   const categoryData = range_expenses_by_category?.data?.find(
+     (cat) => cat.category.name === category.name
+   );
+
+   if (!categoryData) {
+     return;
+   }
+
+   // Map expenses to include the full category object
+   const expensesWithCategory = (categoryData.expenses || []).map((expense: any) => ({
+     ...expense,
+     category_id: categoryData.category, // Use the full category object from categoryData
+   }));
+
+   setSelectedDate(null);
+   setSelectedCategoryName(category.name);
+   setDrawerExpenses(expensesWithCategory);
+   setExpensesDrawerOpen(true);
+ };
+
+ // Handle expense click from drawer
+ const handleExpenseClick = (expense: Expense) => {
+   setSelectedExpenseId(expense._id);
+   setSelectedExpenseData(expense);
+   setViewExpenseDrawerOpen(true);
+ };
+
+ // Handle view expense close
+ const handleViewExpenseClose = (open: boolean) => {
+   setViewExpenseDrawerOpen(open);
+   if (!open) {
+     setSelectedExpenseId(null);
+     setSelectedExpenseData(null);
+   }
+ };
+
+ // Handle edit expense
+ const handleEditExpense = (expenseId: string) => {
+   const expenseData = drawerExpenses.find(exp => exp._id === expenseId);
+   if (expenseData) {
+     setExpenseToEdit(expenseData);
+     setEditExpenseDrawerOpen(true);
+     setViewExpenseDrawerOpen(false);
+   }
+ };
+
+ // Handle edit expense drawer close
+ const handleEditExpenseClose = (open: boolean) => {
+   setEditExpenseDrawerOpen(open);
+   if (!open) {
+     setExpenseToEdit(null);
+   }
+ };
+
+ // Handle delete expense
+ const handleDeleteExpense = (expenseId: string) => {
+   setSelectedExpenseId(expenseId);
+   const expenseData = drawerExpenses.find(exp => exp._id === expenseId);
+   setSelectedExpenseData(expenseData || null);
+   setDeleteExpenseDrawerOpen(true);
+ };
+
+ // Handle confirm delete
+ const handleConfirmDelete = async () => {
+   if (selectedExpenseId) {
+     try {
+       await dispatch(deleteExpense(selectedExpenseId)).unwrap();
+       setViewExpenseDrawerOpen(false);
+       setDeleteExpenseDrawerOpen(false);
+       setSelectedExpenseId(null);
+       setSelectedExpenseData(null);
+       // Remove from drawer expenses
+       setDrawerExpenses(prev => prev.filter(exp => exp._id !== selectedExpenseId));
+       // Refresh data
+       fetchData();
+     } catch (error) {
+       console.error('Failed to delete expense:', error);
+     }
+   }
+ };
+
+ const handleDeleteExpenseCancel = () => {
+   setDeleteExpenseDrawerOpen(false);
+   setSelectedExpenseId(null);
+   setSelectedExpenseData(null);
+ };
+
 
  // Prepare chart data with percentage changes
  const chartData = useMemo(() => {
-   if (!range_expenses?.data) return []
+   if (!range_expenses_by_frequency?.data) return []
 
-   return range_expenses.data.map((item, index) => {
-     const label = formatPeriodLabel(item.period, range_expenses.frequency)
+   return range_expenses_by_frequency.data.map((item, index) => {
+     const label = formatPeriodLabel(item.period, range_expenses_by_frequency.frequency)
      // For week frequency, split label into week number and date range
-     const isWeek = range_expenses.frequency === 'week'
+     const isWeek = range_expenses_by_frequency.frequency === 'week'
      const [weekLabel, dateRange] = isWeek ? label.split('\n') : [label, '']
      
      // Calculate percentage change from previous period
      let change: string | null = null
      let isSpike = false
      if (index > 0) {
-       const prevAmount = range_expenses.data[index - 1].total_amount
+       const prevAmount = range_expenses_by_frequency.data[index - 1].total_amount
        if (prevAmount === 0 && item.total_amount > 0) {
          change = 'Infinity%'
          isSpike = true
@@ -192,11 +321,11 @@ const ReportScreen = () => {
      
      // Format period for display (e.g., "Apr 25", "Oct 25")
      let displayPeriod = weekLabel
-     if (range_expenses.frequency === 'month') {
+     if (range_expenses_by_frequency.frequency === 'month') {
        displayPeriod = dayjs(item.period).format('MMM YY')
-     } else if (range_expenses.frequency === 'day') {
+     } else if (range_expenses_by_frequency.frequency === 'day') {
        displayPeriod = dayjs(item.period).format('MMM DD')
-     } else if (range_expenses.frequency === 'year') {
+     } else if (range_expenses_by_frequency.frequency === 'year') {
        displayPeriod = dayjs(item.period).format('YYYY')
      }
      
@@ -210,17 +339,17 @@ const ReportScreen = () => {
        periodRaw: item.period
      }
    })
- }, [range_expenses])
+ }, [range_expenses_by_frequency])
 
 
  // Prepare category data for doughnut chart
  const categoryChartData = useMemo(() => {
-   if (!monthly_expenses?.categoryData?.categories) return []
+   if (!range_expenses_by_category?.data) return []
 
-   const totalAmount = monthly_expenses.categoryData.total_amount
+   const totalAmount = range_expenses_by_category.total_amount
    
    // Create a copy of the array before sorting (Redux state is immutable)
-   const categories = [...monthly_expenses.categoryData.categories]
+   const categories = [...range_expenses_by_category.data]
      .sort((a, b) => b.total_amount - a.total_amount)
      .map((cat, index) => {
        const percentage = totalAmount > 0 ? ((cat.total_amount / totalAmount) * 100).toFixed(1) : '0'
@@ -231,12 +360,13 @@ const ReportScreen = () => {
          expenseCount: cat.expense_count,
          color: cat.category.color, // Category's original color for list dot
          chartColor: PIE_CHART_COLORS[index % PIE_CHART_COLORS.length], // Unique color from palette for pie chart
-         icon: cat.category.icon || '💰'
+         icon: cat.category.icon || '💰',
+         categoryId: cat.category_id // Add category ID for fetching expenses
        }
      })
    
    return categories
- }, [monthly_expenses])
+ }, [range_expenses_by_category])
 
   return (
     <Layout isHeaderVisible={false} >
@@ -252,7 +382,7 @@ const ReportScreen = () => {
       </div>
 
       {/* Area Chart */}
-      {range_expenses_loading ? (
+      {range_expenses_by_frequency_loading ? (
         <div className="px-4 sm:px-6 mb-6">
           <AreaChartSkeleton />
         </div>
@@ -260,7 +390,8 @@ const ReportScreen = () => {
         <div className="px-4 sm:px-6 mb-6">
           <AreaChart 
             chartData={chartData}
-            frequency={range_expenses?.frequency}
+            frequency={range_expenses_by_frequency?.frequency}
+            onPeriodClick={handlePeriodClick}
           />
         </div>
       ) : (
@@ -274,7 +405,7 @@ const ReportScreen = () => {
       )}
 
       {/* Category Distribution */}
-      {monthly_expenses_loading ? (
+      {range_expenses_by_category_loading ? (
         <div className="px-4 sm:px-6 mb-6">
           <DoughnutChartSkeleton />
         </div>
@@ -282,10 +413,53 @@ const ReportScreen = () => {
         <div className="px-4 sm:px-6 mb-6">
           <DoughnutChart 
             categoryChartData={categoryChartData}
-            totalAmount={monthly_expenses?.categoryData?.total_amount || 0}
+            totalAmount={range_expenses_by_category?.total_amount || 0}
+            onCategoryClick={handleCategoryClick}
           />
         </div>
       ) : null}
+
+      {/* Date/Category Expenses Drawer */}
+      <DateExpensesDrawer
+        open={expensesDrawerOpen}
+        onOpenChange={setExpensesDrawerOpen}
+        selectedDate={selectedDate}
+        selectedCategoryName={selectedCategoryName}
+        expenses={drawerExpenses}
+        onExpenseClick={handleExpenseClick}
+      />
+
+      {/* View Expense Drawer */}
+      <ViewExpense
+        open={viewExpenseDrawerOpen}
+        onOpenChange={handleViewExpenseClose}
+        expenseId={selectedExpenseId}
+        expenseData={selectedExpenseData}
+        onEdit={handleEditExpense}
+        onDelete={handleDeleteExpense}
+      />
+
+      {/* Edit Expense Drawer */}
+      <CreateUpdateExpense
+        open={editExpenseDrawerOpen}
+        onOpenChange={handleEditExpenseClose}
+        expense={expenseToEdit}
+        expenseId={expenseToEdit?._id || null}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialogComponent
+        title="Delete Expense"
+        description={`Are you sure you want to delete "${selectedExpenseData?.title}"? This action cannot be undone and will remove all associated line items.`}
+        actionLabel="Delete"
+        cancelLabel="Cancel"
+        onAction={handleConfirmDelete}
+        onCancel={handleDeleteExpenseCancel}
+        loading={delete_expense_loading}
+        variant="destructive"
+        open={deleteExpenseDrawerOpen}
+        onOpenChange={setDeleteExpenseDrawerOpen}
+      />
     </Layout>
   )
 }
