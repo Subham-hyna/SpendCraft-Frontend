@@ -76,21 +76,21 @@ const formatPeriodLabel = (period: string, frequency: string): string => {
 
 // Predefined 16-color palette for pie chart (assigned uniquely to each category)
 const PIE_CHART_COLORS = [
-  '#60a5fa', // blue-400
-  '#34d399', // emerald-400
-  '#fbbf24', // amber-400
-  '#f87171', // red-400
   '#a78bfa', // violet-400
-  '#fb7185', // rose-400
-  '#4ade80', // green-400
   '#22d3ee', // cyan-400
   '#f472b6', // pink-400
+  '#34d399', // emerald-400
+  '#fbbf24', // amber-400
   '#818cf8', // indigo-400
   '#38bdf8', // sky-400
   '#84cc16', // lime-400
   '#f59e0b', // amber-500
   '#ec4899', // pink-500
   '#8b5cf6', // violet-500
+  '#60a5fa', // blue-400
+  '#f87171', // red-400
+  '#fb7185', // rose-400
+  '#4ade80', // green-400
   '#06b6d4', // cyan-500
 ]
 
@@ -126,9 +126,6 @@ const ReportScreen = () => {
  const fetchData = async () => {
     const now = getDayjsInUserTimezone();
     const timezone = getUserTimezone();
-
-    const startOfMonth = now.startOf('month');
-    const endOfMonth = now.endOf('month');
 
     let startDate: any = '';
     let endDate: any = '';
